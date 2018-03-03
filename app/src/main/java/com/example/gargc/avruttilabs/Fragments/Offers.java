@@ -1,9 +1,16 @@
 package com.example.gargc.avruttilabs.Fragments;
 
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +22,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.gargc.avruttilabs.Activity.ItemDetailsActivity;
 import com.example.gargc.avruttilabs.Model.Offer;
 import com.example.gargc.avruttilabs.Model.SubCategory;
 import com.example.gargc.avruttilabs.R;
@@ -38,6 +46,8 @@ public class Offers extends Fragment {
     ArrayList<String> subCategoryName;
     DatabaseReference mDatabase,mProductsDatabase;
 
+    Context mContext;
+
     public Offers() {
         // Required empty public constructor
     }
@@ -48,6 +58,7 @@ public class Offers extends Fragment {
                              Bundle savedInstanceState) {
 
         View view= inflater.inflate(R.layout.fragmentlayout, container, false);
+        mContext=getContext();
 
         Log.i("offers","yu");
 
@@ -59,11 +70,13 @@ public class Offers extends Fragment {
 
         LinearLayoutManager layoutManager= new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL, false);
         subcategoryRecyclerView.setLayoutManager(layoutManager);
+        subcategoryRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
         subcategoryRecyclerView.hasFixedSize();
 
         // for products setting layout manager
         GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(),2);
         itemListRecyclerView.setLayoutManager(gridLayoutManager);
+        itemListRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
         itemListRecyclerView.setHasFixedSize(true);
 
 
@@ -107,7 +120,7 @@ public class Offers extends Fragment {
                 mProductsDatabase
         ) {
             @Override
-            protected void populateViewHolder(MyProductHolder viewHolder, Offer model, int position) {
+            protected void populateViewHolder(final MyProductHolder viewHolder, final Offer model, int position) {
                 Log.i("product",model.toString());
                 viewHolder.item.setText(model.getTitle());
                 viewHolder.itemCost.setText(model.getPrice());
@@ -115,6 +128,20 @@ public class Offers extends Fragment {
                 Log.i("image",model.getImage());
                 Picasso.with(getContext()).load(model.getImage()).placeholder(R.mipmap.image_not_available).into(viewHolder.imageView);
 
+                // setting on click on item view
+                viewHolder.view.setOnClickListener(new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                    @Override
+                    public void onClick(View view) {
+
+                        Intent intent=new Intent(getContext(),ItemDetailsActivity.class);
+                        intent.putExtra("Item",model);
+                        final View sharedView = viewHolder.imageView;
+                        ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity)mContext, sharedView, "newsPhotoTransitionFromMainActivityToReadNewsActivity");
+                        mContext.startActivity(intent, activityOptionsCompat.toBundle());
+
+                    }
+                });
 
             }
 
@@ -131,8 +158,16 @@ public class Offers extends Fragment {
         public MyViewHolder(View itemView)
         {
             super(itemView);
-
             btn = (Button)itemView.findViewById(R.id.subcategorybutton);
+
+            // setting on click in subcategory
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
         }
 
     }
@@ -141,15 +176,20 @@ public class Offers extends Fragment {
         ImageView imageView;
         TextView item,stockDetails,itemCost;
         LikeButton likeButton;
+        View view;
 
         public MyProductHolder(View itemView) {
             super(itemView);
+            this.view=itemView;
 
             imageView=(ImageView) itemView.findViewById(R.id.image1);
             item=(TextView) itemView.findViewById(R.id.item);
             stockDetails=(TextView) itemView.findViewById(R.id.stockdetails);
             itemCost=(TextView) itemView.findViewById(R.id.itemcost);
             likeButton=(LikeButton) itemView.findViewById(R.id.likebutton);
+
+
+
         }
     }
 

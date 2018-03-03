@@ -1,10 +1,12 @@
 package com.example.gargc.avruttilabs.Model;
 
+import java.io.Serializable;
+
 /**
  * Created by gargc on 09-02-2018.
  */
 
-public class Offer {
+public class Offer implements Serializable {
 
     public Offer()
     {
