@@ -5,7 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/cardview_light_background"
     tools:context="com.example.gargc.avruttilabs.Activity.CartActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary">
+
+        <ImageView
+            android:layout_marginLeft="50dp"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/logo_shopping"
+           />
+
+    </android.support.design.widget.AppBarLayout>
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"

@@ -21,6 +21,12 @@
             android:background="@color/colorPrimary"
             app:theme="@style/CustomActionBar">
 
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/logo_shopping"
+                />
+
             <com.miguelcatalan.materialsearchview.MaterialSearchView
                 android:id="@+id/main_search_view"
                 android:layout_width="match_parent"
