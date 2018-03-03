@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.gargc.avruttilabs.Activity.CartActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -125,7 +126,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item)
+    {
+        switch(item.getItemId())
+        {
+
+            case R.id.my_cart : startActivity(new Intent(MainActivity.this, CartActivity.class));
+                                break;
+
+        }
+
+        drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 }

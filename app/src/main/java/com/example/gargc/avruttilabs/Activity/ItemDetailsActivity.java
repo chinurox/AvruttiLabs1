@@ -146,7 +146,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task)
             {
-                if (!task.isSuccessful())
+                if (task.isSuccessful())
                 {
                     mProgress.dismiss();
                     Toast.makeText(ItemDetailsActivity.this, "Item added to cart", Toast.LENGTH_SHORT).show();
