@@ -1,28 +1,40 @@
 package com.example.gargc.avruttilabs.Activity;
 
+import android.app.ProgressDialog;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.transition.TransitionInflater;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.gargc.avruttilabs.Adapter.ViewPageAdapter;
 import com.example.gargc.avruttilabs.Model.Offer;
 import com.example.gargc.avruttilabs.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class ItemDetailsActivity extends AppCompatActivity {
 
-    TextView itemTitle,itemCost,status,itemDescription;
-
+    private DatabaseReference cartDatabase;
+    private FirebaseAuth mAuth;
+    private String uid;
+    TextView itemTitle,itemCost,status,itemDescription,addCart;
     ViewPager viewPager;
     LinearLayout sliderDotspanel;
     int dotscount;
@@ -43,10 +55,15 @@ public class ItemDetailsActivity extends AppCompatActivity {
 
         sliderDotspanel=(LinearLayout) findViewById(R.id.SliderDots);
 
-        itemTitle=(TextView) findViewById(R.id.itemName);
-        itemCost=(TextView) findViewById(R.id.itemCost1);
-        status=(TextView) findViewById(R.id.modeOfDelivery);
-        itemDescription=(TextView) findViewById(R.id.itemDetails);
+        itemTitle = (TextView) findViewById(R.id.itemName);
+        itemCost = (TextView) findViewById(R.id.itemCost1);
+        status = (TextView) findViewById(R.id.modeOfDelivery);
+        itemDescription = (TextView) findViewById(R.id.itemDetails);
+        addCart = (TextView) findViewById(R.id.text_action_bottom1);
+
+        mAuth = FirebaseAuth.getInstance();
+        uid = mAuth.getCurrentUser().getUid();
+        cartDatabase = FirebaseDatabase.getInstance().getReference().child("Cart").child(uid);
 
         viewPager=(ViewPager) findViewById(R.id.viewpager);
 
@@ -99,8 +116,48 @@ public class ItemDetailsActivity extends AppCompatActivity {
         Timer timer=new Timer();
         timer.scheduleAtFixedRate(new MyTimerTask(),2000,4000);
 
+        addCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                addToCart();
+            }
+        });
 
+    }
 
+    private void addToCart()
+    {
+        final ProgressDialog mProgress = new ProgressDialog(ItemDetailsActivity.this);
+
+        mProgress.setTitle("adding to cart...");
+        mProgress.setCanceledOnTouchOutside(false);
+        mProgress.show();
+
+        DatabaseReference userCartDB = cartDatabase.child(offer.getTitle());
+        HashMap cartMap = new HashMap();
+        cartMap.put("title",offer.getTitle());
+        cartMap.put("image",offer.getImage());
+        cartMap.put("price",offer.getPrice());
+        cartMap.put("status",offer.getStatus());
+        cartMap.put("category",offer.getCategory());
+        cartMap.put("subCategory",offer.getSubcategory());
+        userCartDB.setValue(cartMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task)
+            {
+                if (!task.isSuccessful())
+                {
+                    mProgress.dismiss();
+                    Toast.makeText(ItemDetailsActivity.this, "Item added to cart", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    mProgress.dismiss();
+                    Toast.makeText(ItemDetailsActivity.this, "couldnot be added", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     @Override

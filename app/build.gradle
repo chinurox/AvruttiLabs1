@@ -25,6 +25,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.github.apl-devs:appintro:v4.2.2'
@@ -36,12 +37,12 @@ dependencies {
     compile 'com.android.support:cardview-v7:26.+'
     compile 'com.android.support:recyclerview-v7:26.+'
     compile 'com.firebaseui:firebase-ui-database:1.0.1'
-    compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.facebook.fresco:fresco:0.14.1'
     compile 'info.hoang8f:fbutton:1.0.5'
     compile 'com.github.jd-alexander:LikeButton:0.2.3'
     testCompile 'junit:junit:4.12'
 }
+
 
 
 
