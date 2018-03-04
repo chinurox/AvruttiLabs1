@@ -1,15 +1,13 @@
-package com.example.gargc.avruttilabs;
+package com.example.gargc.avruttilabs.Activity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.example.gargc.avruttilabs.Fragments.SampleSlide;
+import com.example.gargc.avruttilabs.R;
 import com.github.paolorotolo.appintro.AppIntro;
-import com.github.paolorotolo.appintro.AppIntroFragment;
 
 public class WelcomeActivity extends AppIntro {
 

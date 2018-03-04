@@ -1,7 +1,6 @@
-package com.example.gargc.avruttilabs;
+package com.example.gargc.avruttilabs.Activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -13,11 +12,10 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.gargc.avruttilabs.Activity.CartActivity;
+import com.example.gargc.avruttilabs.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -134,6 +132,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.my_cart : startActivity(new Intent(MainActivity.this, CartActivity.class));
                                 break;
 
+            case R.id.logout_btn : mAuth.signOut();
+                                   Intent loginIntent = new Intent(MainActivity.this,LoginActivity.class);
+                                   loginIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                   startActivity(loginIntent);
+                                   finish();
+                                   break;
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);

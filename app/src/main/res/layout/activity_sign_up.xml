@@ -6,7 +6,7 @@
     android:background="#061c32"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context="com.example.gargc.avruttilabs.SignUpActivity"
+    tools:context="com.example.gargc.avruttilabs.Activity.SignUpActivity"
     tools:ignore="RtlHardcoded,RtlSymmetry,HardcodedText">
 
     <LinearLayout

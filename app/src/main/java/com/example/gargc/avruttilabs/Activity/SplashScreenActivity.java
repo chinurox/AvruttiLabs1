@@ -1,4 +1,4 @@
-package com.example.gargc.avruttilabs;
+package com.example.gargc.avruttilabs.Activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +11,8 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
+
+import com.example.gargc.avruttilabs.R;
 
 public class SplashScreenActivity extends AppCompatActivity implements Animation.AnimationListener{
 

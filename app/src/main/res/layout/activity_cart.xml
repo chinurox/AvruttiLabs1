@@ -1,31 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/cardview_light_background"
+    android:orientation="vertical"
     tools:context="com.example.gargc.avruttilabs.Activity.CartActivity">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/cart_app_bar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary">
 
-        <ImageView
-            android:layout_marginLeft="50dp"
-            android:layout_width="80dp"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/logo_shopping"
-           />
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            android:text="MY CART"
+            android:textColor="@color/gen_white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/cart_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/cart_list">
+        android:layout_below="@+id/cart_app_bar"
+        android:visibility="gone"
+        android:layout_marginBottom="50dp">
     </android.support.v7.widget.RecyclerView>
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/cart_layout_payment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:elevation="30dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/text_action_bottom1"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:background="@color/gen_white"
+            android:gravity="center"
+            android:text="Rs 8,750"
+            android:textColor="@color/gen_black"
+            android:textSize="14dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text_action_bottom2"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:text="CHECKOUT NOW"
+            android:textColor="@color/gen_white"
+            android:textSize="14dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/empty_container"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true">
+
+        <include
+            android:id="@+id/layout_cart_empty"
+            layout="@layout/empty_message_layout_action"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+</RelativeLayout>

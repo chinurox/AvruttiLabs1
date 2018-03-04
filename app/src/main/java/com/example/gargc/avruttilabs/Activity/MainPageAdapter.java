@@ -1,4 +1,4 @@
-package com.example.gargc.avruttilabs;
+package com.example.gargc.avruttilabs.Activity;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

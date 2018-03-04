@@ -58,5 +58,6 @@
     <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions</string>
     <string name="hint_email">Email</string>
     <string name="btn_back"><![CDATA[<![CDATA[>>Back]]>]></string>
+    <string name="logout">Logout</string>
 
 </resources>
