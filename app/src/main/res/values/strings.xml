@@ -48,6 +48,8 @@
     <string name="action_cart">Cart</string>
     <string name="action_notifications">Notifications</string>
 
+    <string name="qty_spinner_text">Choose Quantity</string>
+
 
     <string name="search_hint">Search for Products, Brands and More</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>

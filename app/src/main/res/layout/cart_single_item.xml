@@ -30,7 +30,7 @@
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="100dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_weight="1.2"
                     android:gravity="center_vertical"
@@ -63,6 +63,14 @@
                         android:text="In Stock"
                         android:textColor="#14e11b"
                         android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/single_cart_quantity"
+                        android:textColor="@color/gen_black"
+                        android:layout_marginTop="2dp"
+                        android:text="quantity : 1"/>
 
                 </LinearLayout>
 

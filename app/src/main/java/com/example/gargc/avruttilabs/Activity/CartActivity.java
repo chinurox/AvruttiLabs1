@@ -62,6 +62,7 @@ public class CartActivity extends AppCompatActivity
                 viewHolder.title.setText(model.getTitle());
                 viewHolder.price.setText(model.getPrice());
                 viewHolder.status.setText(model.getStatus());
+                viewHolder.qty.setText("quantity : "+model.getQuantity());
 
                 viewHolder.delete.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -82,7 +83,7 @@ public class CartActivity extends AppCompatActivity
     public static class CartViewHolder extends RecyclerView.ViewHolder
     {
         ImageView img;
-        TextView title,price,status;
+        TextView title,price,status,qty;
         Button delete,buy;
 
         public CartViewHolder(View itemView)
@@ -93,6 +94,7 @@ public class CartActivity extends AppCompatActivity
             title = (TextView)itemView.findViewById(R.id.single_cart_name);
             price = (TextView)itemView.findViewById(R.id.single_cart_price);
             status = (TextView)itemView.findViewById(R.id.single_cart_status);
+            qty = (TextView)itemView.findViewById(R.id.single_cart_quantity);
             delete = (Button)itemView.findViewById(R.id.single_cart_btn_delete);
             buy = (Button)itemView.findViewById(R.id.single_cart_btn_buy);
         }

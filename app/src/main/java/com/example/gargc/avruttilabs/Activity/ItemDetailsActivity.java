@@ -10,8 +10,11 @@ import android.os.Bundle;
 import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,11 +29,13 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class ItemDetailsActivity extends AppCompatActivity {
+public class ItemDetailsActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
+    private Spinner itemQty;
     private DatabaseReference cartDatabase;
     private FirebaseAuth mAuth;
     private String uid;
@@ -60,12 +65,36 @@ public class ItemDetailsActivity extends AppCompatActivity {
         status = (TextView) findViewById(R.id.modeOfDelivery);
         itemDescription = (TextView) findViewById(R.id.itemDetails);
         addCart = (TextView) findViewById(R.id.text_action_bottom1);
+        itemQty = (Spinner) findViewById(R.id.item_detail_qty);
 
         mAuth = FirebaseAuth.getInstance();
         uid = mAuth.getCurrentUser().getUid();
         cartDatabase = FirebaseDatabase.getInstance().getReference().child("Cart").child(uid);
 
         viewPager=(ViewPager) findViewById(R.id.viewpager);
+
+        itemQty.setOnItemSelectedListener(this);
+
+        // Spinner Drop down elements
+        List<String> categories = new ArrayList<String>();
+        categories.add("1");
+        categories.add("2");
+        categories.add("3");
+        categories.add("4");
+        categories.add("5");
+        categories.add("6");
+        categories.add("7");
+        categories.add("8");
+        categories.add("9");
+        categories.add("10");
+        // Creating adapter for spinner
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        itemQty.setAdapter(dataAdapter);
 
         ArrayList<String> arrayList=new ArrayList<>();
         arrayList.add(offer.getImage());
@@ -134,6 +163,8 @@ public class ItemDetailsActivity extends AppCompatActivity {
         mProgress.setCanceledOnTouchOutside(false);
         mProgress.show();
 
+        Log.i("item qty",itemQty.getSelectedItem().toString());
+
         DatabaseReference userCartDB = cartDatabase.child(offer.getTitle());
         HashMap cartMap = new HashMap();
         cartMap.put("title",offer.getTitle());
@@ -141,6 +172,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
         cartMap.put("price",offer.getPrice());
         cartMap.put("status",offer.getStatus());
         cartMap.put("category",offer.getCategory());
+        cartMap.put("quantity",itemQty.getSelectedItem().toString());
         cartMap.put("subCategory",offer.getSubcategory());
         userCartDB.setValue(cartMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -168,6 +200,14 @@ public class ItemDetailsActivity extends AppCompatActivity {
         status.setText(offer.getStatus());
         itemDescription.setText(offer.getDescription());
     }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {}
 
     private class MyTimerTask extends TimerTask {
         @Override

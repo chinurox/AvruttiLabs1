@@ -8,6 +8,7 @@ public class CartModel
     private String status;
     private String subCategory;
     private String title;
+    private String quantity;
 
     public String getCategory() {
         return category;
@@ -55,5 +56,13 @@ public class CartModel
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(String quantity) {
+        this.quantity = quantity;
     }
 }
