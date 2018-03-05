@@ -36,7 +36,7 @@ import com.squareup.picasso.Picasso;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Sensors extends Fragment {
+public class DoItYourself extends Fragment {
 
     RecyclerView subcategoryRecyclerView;
     RecyclerView itemListRecyclerView;
@@ -45,7 +45,7 @@ public class Sensors extends Fragment {
 
     Context mContext;
 
-    public Sensors() {
+    public DoItYourself() {
         // Required empty public constructor
     }
 
@@ -53,7 +53,7 @@ public class Sensors extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view= inflater.inflate(R.layout.fragmentlayout, container, false);
+        View view = inflater.inflate(R.layout.fragmentlayout, container, false);
         mContext=getContext();
 
         Log.i("offers","yu");
@@ -61,8 +61,8 @@ public class Sensors extends Fragment {
         subcategoryRecyclerView=(RecyclerView) view.findViewById(R.id.subcategory_content);
         itemListRecyclerView=(RecyclerView) view.findViewById(R.id.subcategory_item_layout);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Category").child("Sensors");
-        mProductsDatabase=FirebaseDatabase.getInstance().getReference().child("Products").child("Sensors");
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Category").child("Do it Yourself");
+        mProductsDatabase=FirebaseDatabase.getInstance().getReference().child("Products").child("Do it Yourself");
 
         LinearLayoutManager layoutManager= new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL, false);
         subcategoryRecyclerView.setLayoutManager(layoutManager);
@@ -238,4 +238,3 @@ public class Sensors extends Fragment {
     }
 
 }
-

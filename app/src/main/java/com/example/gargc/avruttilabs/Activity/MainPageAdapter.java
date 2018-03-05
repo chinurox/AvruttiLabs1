@@ -4,6 +4,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.example.gargc.avruttilabs.Fragments.ContactUs;
+import com.example.gargc.avruttilabs.Fragments.DoItYourself;
+import com.example.gargc.avruttilabs.Fragments.PCBRequest;
 import com.example.gargc.avruttilabs.Fragments.Robotics;
 import com.example.gargc.avruttilabs.Fragments.BasicComponentsFragment;
 import com.example.gargc.avruttilabs.Fragments.Embedded;
@@ -38,9 +41,15 @@ public class MainPageAdapter extends FragmentPagerAdapter {
 
             case 4 : Tools tools = new Tools();
                     return tools;
-//
-//            case 5 : BriefsFragment briefsFragment = new BriefsFragment();
-//                return briefsFragment;
+
+            case 5 : DoItYourself doItYourself = new DoItYourself();
+                     return doItYourself;
+
+            case 6 : PCBRequest pcbRequest = new PCBRequest();
+                     return pcbRequest;
+
+            case 7 : ContactUs contactUs = new ContactUs();
+                     return  contactUs;
 
             default : return null;
         }
@@ -50,7 +59,7 @@ public class MainPageAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount()
     {
-        return 5;
+        return 8;
     }
 
     @Override
@@ -58,17 +67,21 @@ public class MainPageAdapter extends FragmentPagerAdapter {
     {
         switch(position)
         {
-            case 0 : return "BasicComponentsFragment";
+            case 0 : return "Basic Components";
 
             case 1 : return "Sensors";
 
             case 2 : return "Embedded";
 
-            case 3 :return "Robotics";
-//
+            case 3 : return "Robotics";
+
             case 4 : return "Tools";
-//
-//            case 5 : return "Briefs";
+
+            case 5 : return "Do It Yourself";
+
+            case 6 : return "PCB Request";
+
+            case 7 : return "Contact Us";
         }
 
         return super.getPageTitle(position);

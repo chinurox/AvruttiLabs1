@@ -33,8 +33,6 @@ import com.google.firebase.database.Query;
 import com.like.LikeButton;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-
 /**
  * A simple {@link Fragment} subclass.
  */
