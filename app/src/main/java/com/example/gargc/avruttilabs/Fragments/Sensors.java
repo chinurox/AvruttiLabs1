@@ -12,10 +12,10 @@ import com.example.gargc.avruttilabs.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Accessories extends Fragment {
+public class Sensors extends Fragment {
 
 
-    public Accessories() {
+    public Sensors() {
         // Required empty public constructor
     }
 
@@ -24,8 +24,7 @@ public class Accessories extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_accessories, container, false);
-
+        return inflater.inflate(R.layout.fragment_electronics, container, false);
     }
 
 }

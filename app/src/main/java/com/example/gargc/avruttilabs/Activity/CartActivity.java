@@ -40,6 +40,7 @@ public class CartActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
+        Log.i("hello","hello");
 
         cartList = (RecyclerView)findViewById(R.id.cart_list);
         paymentLayout = (LinearLayout)findViewById(R.id.cart_layout_payment);
@@ -49,6 +50,7 @@ public class CartActivity extends AppCompatActivity
         mAuth = FirebaseAuth.getInstance();
         uid = mAuth.getCurrentUser().getUid();
         cartDatabase = FirebaseDatabase.getInstance().getReference().child("Cart").child(uid);
+        Log.i("check",cartDatabase.child("price")+"");
 
         shopNow.setOnClickListener(new View.OnClickListener() {
             @Override

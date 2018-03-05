@@ -12,10 +12,10 @@ import com.example.gargc.avruttilabs.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Lifestyle extends Fragment {
+public class Embedded extends Fragment {
 
 
-    public Lifestyle() {
+    public Embedded() {
         // Required empty public constructor
     }
 

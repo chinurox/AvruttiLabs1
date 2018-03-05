@@ -40,17 +40,16 @@ import java.util.ArrayList;
  */
 
 
-public class Offers extends Fragment {
+public class BasicComponentsFragment extends Fragment {
 
     RecyclerView subcategoryRecyclerView;
     RecyclerView itemListRecyclerView;
-    ArrayList<String> subCategoryName;
     DatabaseReference mDatabase,mProductsDatabase;
     Query query;
 
     Context mContext;
 
-    public Offers() {
+    public BasicComponentsFragment() {
         // Required empty public constructor
     }
 

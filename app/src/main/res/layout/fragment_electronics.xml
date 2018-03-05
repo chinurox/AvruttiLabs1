@@ -2,12 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.gargc.avruttilabs.Fragments.Electronics">
+    tools:context="com.example.gargc.avruttilabs.Fragments.Sensors">
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/offers">
+        android:id="@+id/basicComponentsFragment">
 
     </android.support.v7.widget.RecyclerView>
 
