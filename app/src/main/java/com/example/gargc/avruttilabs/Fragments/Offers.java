@@ -29,6 +29,7 @@ import com.example.gargc.avruttilabs.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.like.LikeButton;
 import com.squareup.picasso.Picasso;
 
@@ -45,6 +46,7 @@ public class Offers extends Fragment {
     RecyclerView itemListRecyclerView;
     ArrayList<String> subCategoryName;
     DatabaseReference mDatabase,mProductsDatabase;
+    Query query;
 
     Context mContext;
 
@@ -65,8 +67,8 @@ public class Offers extends Fragment {
         subcategoryRecyclerView=(RecyclerView) view.findViewById(R.id.subcategory_content);
         itemListRecyclerView=(RecyclerView) view.findViewById(R.id.subcategory_item_layout);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Category").child("category 1");
-        mProductsDatabase=FirebaseDatabase.getInstance().getReference().child("Products").child("category 1");
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Category").child("Basic Components");
+        mProductsDatabase=FirebaseDatabase.getInstance().getReference().child("Products").child("Basic Components");
 
         LinearLayoutManager layoutManager= new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL, false);
         subcategoryRecyclerView.setLayoutManager(layoutManager);
@@ -78,8 +80,6 @@ public class Offers extends Fragment {
         itemListRecyclerView.setLayoutManager(gridLayoutManager);
         itemListRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
         itemListRecyclerView.setHasFixedSize(true);
-
-
 
         return view;
 
@@ -100,11 +100,23 @@ public class Offers extends Fragment {
         {
 
             @Override
-            protected void populateViewHolder(MyViewHolder viewHolder, SubCategory model, int position)
+            protected void populateViewHolder(final MyViewHolder viewHolder, SubCategory model, int position)
             {
 
                 Log.i("data",model.getName());
                 viewHolder.btn.setText(model.getName());
+
+                viewHolder.btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        String subcat = viewHolder.btn.getText().toString();
+
+                        query = mProductsDatabase.orderByChild("subcategory").equalTo(subcat);
+
+                        setSubCategoryProducts();
+                    }
+                });
             }
         };
 
@@ -151,6 +163,46 @@ public class Offers extends Fragment {
         itemListRecyclerView.setAdapter(firebaseRecyclerAdapter1);
     }
 
+    private void setSubCategoryProducts()
+    {
+        FirebaseRecyclerAdapter<Offer,MyProductHolder> firebaseRecyclerAdapter1=new FirebaseRecyclerAdapter<Offer,MyProductHolder>(
+                Offer.class,
+                R.layout.list_item,
+                MyProductHolder.class,
+                query
+        ) {
+            @Override
+            protected void populateViewHolder(final MyProductHolder viewHolder, final Offer model, int position) {
+                Log.i("product",model.toString());
+                viewHolder.item.setText(model.getTitle());
+                viewHolder.itemCost.setText(model.getPrice());
+                viewHolder.stockDetails.setText(model.getStatus());
+                Log.i("image",model.getImage());
+                Picasso.with(getContext()).load(model.getImage()).placeholder(R.mipmap.image_not_available).into(viewHolder.imageView);
+
+                // setting on click on item view
+                viewHolder.view.setOnClickListener(new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                    @Override
+                    public void onClick(View view) {
+
+                        Intent intent=new Intent(getContext(),ItemDetailsActivity.class);
+                        intent.putExtra("Item",model);
+                        final View sharedView = viewHolder.imageView;
+                        ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity)mContext, sharedView, "newsPhotoTransitionFromMainActivityToReadNewsActivity");
+                        mContext.startActivity(intent, activityOptionsCompat.toBundle());
+
+                    }
+                });
+
+            }
+
+        };
+        firebaseRecyclerAdapter1.notifyDataSetChanged();
+        itemListRecyclerView.setAdapter(firebaseRecyclerAdapter1);
+
+    }
+
     public static class MyViewHolder extends RecyclerView.ViewHolder
     {
         Button btn;
@@ -187,8 +239,6 @@ public class Offers extends Fragment {
             stockDetails=(TextView) itemView.findViewById(R.id.stockdetails);
             itemCost=(TextView) itemView.findViewById(R.id.itemcost);
             likeButton=(LikeButton) itemView.findViewById(R.id.likebutton);
-
-
 
         }
     }
