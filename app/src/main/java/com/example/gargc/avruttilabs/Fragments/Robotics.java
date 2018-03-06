@@ -3,8 +3,12 @@ package com.example.gargc.avruttilabs.Fragments;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -84,6 +88,11 @@ public class Robotics extends Fragment
         itemListRecyclerView.setLayoutManager(gridLayoutManager);
         itemListRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
         itemListRecyclerView.setHasFixedSize(true);
+
+        if(!isNetworkAvailable())
+        {
+            showDialog();
+        }
 
         return view;
 
@@ -278,5 +287,29 @@ public class Robotics extends Fragment
 
         }
     }
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public void showDialog()
+    {
+        final AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+
+        alertDialog.setTitle("No Internet!!");
+        alertDialog.setMessage("Please chek you internet connection");
+        alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                alertDialog.dismiss();
+            }
+        });
+
+        // Showing Alert Message
+        alertDialog.show();
+    }
+
 
 }

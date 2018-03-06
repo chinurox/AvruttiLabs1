@@ -27,4 +27,6 @@ public class ContactUs extends Fragment {
         return inflater.inflate(R.layout.fragment_contact_us, container, false);
     }
 
+
+
 }

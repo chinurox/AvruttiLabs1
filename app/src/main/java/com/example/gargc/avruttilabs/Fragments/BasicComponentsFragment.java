@@ -2,8 +2,12 @@ package com.example.gargc.avruttilabs.Fragments;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -21,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.gargc.avruttilabs.Activity.ItemDetailsActivity;
 import com.example.gargc.avruttilabs.Model.Offer;
@@ -95,6 +100,19 @@ public class BasicComponentsFragment extends Fragment {
     {
         super.onStart();
 
+        if(isNetworkAvailable())
+        {
+            loadProducts();
+        }
+        else
+        {
+            showDialog();
+        }
+
+    }
+
+    private void loadProducts()
+    {
         FirebaseRecyclerAdapter<SubCategory,MyViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<SubCategory, MyViewHolder>
                 (
                     SubCategory.class,
@@ -105,7 +123,7 @@ public class BasicComponentsFragment extends Fragment {
         {
 
             @Override
-            protected void populateViewHolder(final MyViewHolder viewHolder, SubCategory model, final int position)
+            protected void populateViewHolder(final MyViewHolder viewHolder, SubCategory model, int position)
             {
 
                 Log.i("data",model.getName());
@@ -204,6 +222,7 @@ public class BasicComponentsFragment extends Fragment {
         };
         firebaseRecyclerAdapter1.notifyDataSetChanged();
         itemListRecyclerView.setAdapter(firebaseRecyclerAdapter1);
+
     }
     private void setSubCategoryProducts()
     {
@@ -278,6 +297,29 @@ public class BasicComponentsFragment extends Fragment {
             likeButton=(LikeButton) itemView.findViewById(R.id.likebutton);
 
         }
+    }
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public void showDialog()
+    {
+        final AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+
+        alertDialog.setTitle("No Internet!!");
+        alertDialog.setMessage("please check your internet connection");
+        alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                alertDialog.dismiss();
+            }
+        });
+
+        // Showing Alert Message
+        alertDialog.show();
     }
 
 }

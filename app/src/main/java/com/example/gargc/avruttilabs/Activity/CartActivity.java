@@ -34,6 +34,8 @@ public class CartActivity extends AppCompatActivity
     private String uid;
     private LinearLayout paymentLayout , emptyLayout;
     private Button shopNow;
+    private TextView cartCost,cartCheckout;
+    private Long totalCost = 0l;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -46,6 +48,8 @@ public class CartActivity extends AppCompatActivity
         paymentLayout = (LinearLayout)findViewById(R.id.cart_layout_payment);
         emptyLayout = (LinearLayout)findViewById(R.id.layout_cart_empty);
         shopNow = (Button)findViewById(R.id.start_shop_btn);
+        cartCost = (TextView)findViewById(R.id.cart_cost);
+        cartCheckout = (TextView)findViewById(R.id.cart_checkout);
 
         mAuth = FirebaseAuth.getInstance();
         uid = mAuth.getCurrentUser().getUid();
@@ -122,6 +126,36 @@ public class CartActivity extends AppCompatActivity
         };
 
         cartList.setAdapter(firebaseRecyclerAdapter);
+
+        DatabaseReference priceDatabase = cartDatabase;
+        priceDatabase.addValueEventListener(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                totalCost = 0l;
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren())
+                {
+                    Log.i("snapshot",snapshot.toString());
+
+                    String priceStr = snapshot.child("price").getValue().toString();
+                    Log.i("before price",priceStr);
+                    priceStr = priceStr.substring(2);
+                    Log.i("price",priceStr);
+
+                    Long price = Long.parseLong(priceStr);
+                    totalCost = totalCost + price;
+                }
+
+                cartCost.setText(totalCost+"");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         super.onStart();
     }

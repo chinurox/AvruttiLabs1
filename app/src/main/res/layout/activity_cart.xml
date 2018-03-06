@@ -42,11 +42,11 @@
         android:layout_alignParentBottom="true"
         android:elevation="30dp"
         android:orientation="horizontal"
-        android:visibility="gone"
+        android:visibility="visible"
         android:weightSum="2">
 
         <TextView
-            android:id="@+id/text_action_bottom1"
+            android:id="@+id/cart_cost"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
@@ -58,7 +58,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/text_action_bottom2"
+            android:id="@+id/cart_checkout"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
