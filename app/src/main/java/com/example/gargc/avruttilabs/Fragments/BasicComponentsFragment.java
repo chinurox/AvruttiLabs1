@@ -87,12 +87,18 @@ public class BasicComponentsFragment extends Fragment {
     {
         super.onStart();
 
+        loadProducts();
+
+    }
+
+    private void loadProducts()
+    {
         FirebaseRecyclerAdapter<SubCategory,MyViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<SubCategory, MyViewHolder>
                 (
-                    SubCategory.class,
-                    R.layout.subcategorybtn,
-                    MyViewHolder.class,
-                    mDatabase
+                        SubCategory.class,
+                        R.layout.subcategorybtn,
+                        MyViewHolder.class,
+                        mDatabase
                 )
         {
 
@@ -107,11 +113,21 @@ public class BasicComponentsFragment extends Fragment {
                     @Override
                     public void onClick(View view)
                     {
-                        String subcat = viewHolder.btn.getText().toString();
+                        if(viewHolder.view.getVisibility()==View.GONE)
+                        {
+                            String subcat = viewHolder.btn.getText().toString();
+                            query = mProductsDatabase.orderByChild("subcategory").equalTo(subcat);
 
-                        query = mProductsDatabase.orderByChild("subcategory").equalTo(subcat);
+                            viewHolder.view.setVisibility(View.VISIBLE);
 
-                        setSubCategoryProducts();
+                            setSubCategoryProducts();
+                        }
+                        else
+                        {
+                            viewHolder.view.setVisibility(View.GONE);
+
+                            loadProducts();
+                        }
                     }
                 });
             }
@@ -158,6 +174,7 @@ public class BasicComponentsFragment extends Fragment {
         };
         firebaseRecyclerAdapter1.notifyDataSetChanged();
         itemListRecyclerView.setAdapter(firebaseRecyclerAdapter1);
+
     }
 
     private void setSubCategoryProducts()
@@ -203,20 +220,14 @@ public class BasicComponentsFragment extends Fragment {
     public static class MyViewHolder extends RecyclerView.ViewHolder
     {
         Button btn;
+        View view;
 
         public MyViewHolder(View itemView)
         {
             super(itemView);
+
             btn = (Button)itemView.findViewById(R.id.subcategorybutton);
-
-            // setting on click in subcategory
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                }
-            });
+            view = (View)itemView.findViewById(R.id.view);
         }
 
     }
