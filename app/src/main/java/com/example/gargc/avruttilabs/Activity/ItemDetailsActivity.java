@@ -173,6 +173,8 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
         wishlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent=new Intent(ItemDetailsActivity.this,WishListActivity.class);
+                startActivity(intent);
 
             }
         });

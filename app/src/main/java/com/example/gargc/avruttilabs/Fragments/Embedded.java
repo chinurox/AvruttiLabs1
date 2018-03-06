@@ -11,6 +11,7 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
@@ -25,17 +26,24 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.gargc.avruttilabs.Activity.ItemDetailsActivity;
 import com.example.gargc.avruttilabs.Model.Offer;
 import com.example.gargc.avruttilabs.Model.SubCategory;
 import com.example.gargc.avruttilabs.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.like.LikeButton;
+import com.like.OnLikeListener;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,6 +62,10 @@ public class Embedded extends Fragment
 
     View viewClicked;
     int positionClicked;
+
+    private DatabaseReference wishListDatabase;
+    private FirebaseAuth mAuth;
+    private String uid;
 
     public Embedded() {
         // Required empty public constructor
@@ -89,6 +101,10 @@ public class Embedded extends Fragment
         {
             showDialog();
         }
+
+        mAuth = FirebaseAuth.getInstance();
+        uid = mAuth.getCurrentUser().getUid();
+        wishListDatabase = FirebaseDatabase.getInstance().getReference().child("WishList").child(uid);
 
         return view;
 
@@ -196,12 +212,52 @@ public class Embedded extends Fragment
                     }
                 });
 
+                viewHolder.likeButton.setOnLikeListener(new OnLikeListener() {
+                    @Override
+                    public void liked(LikeButton likeButton) {
+                        addToWishList(model);
+
+                    }
+
+                    @Override
+                    public void unLiked(LikeButton likeButton) {
+                        wishListDatabase.child(model.getTitle()).removeValue();
+                        Toast.makeText(getContext(), "item removed", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
             }
 
 
         };
         firebaseRecyclerAdapter1.notifyDataSetChanged();
         itemListRecyclerView.setAdapter(firebaseRecyclerAdapter1);
+    }
+
+    private void addToWishList(Offer offer) {
+        DatabaseReference userCartDB = wishListDatabase.child(offer.getTitle());
+        HashMap cartMap = new HashMap();
+        cartMap.put("title",offer.getTitle());
+        cartMap.put("image",offer.getImage());
+        cartMap.put("price",offer.getPrice());
+        cartMap.put("status",offer.getStatus());
+        cartMap.put("category",offer.getCategory());
+        cartMap.put("subCategory",offer.getSubcategory());
+        userCartDB.setValue(cartMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task)
+            {
+                if (task.isSuccessful())
+                {
+                    Toast.makeText(getContext(), "Item added to WishList", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Toast.makeText(getContext(), "couldnot be added", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void setSubCategoryProducts()
@@ -235,6 +291,22 @@ public class Embedded extends Fragment
 
                     }
                 });
+
+                viewHolder.likeButton.setOnLikeListener(new OnLikeListener() {
+                    @Override
+                    public void liked(LikeButton likeButton) {
+                        addToWishList(model);
+
+                    }
+
+                    @Override
+                    public void unLiked(LikeButton likeButton) {
+                        wishListDatabase.child(model.getTitle()).removeValue();
+                        Toast.makeText(getContext(), "item removed", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
 
             }
 

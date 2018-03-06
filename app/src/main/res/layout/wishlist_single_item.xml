@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:id="@+id/swipe"
+    app:leftEdgeSwipeOffset="0dp"
+    android:layout_marginTop="5dp"
+    app:rightEdgeSwipeOffset="0dp"
+    android:layout_height="wrap_content">
+
+
+    <LinearLayout
+        android:id="@+id/bottom_wraper"
+        android:layout_width="100dp"
+        android:orientation="horizontal"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:id="@+id/Delete"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:background="#ff0000"
+            android:gravity="center"
+            android:text="Delete"
+            android:textColor="#fff"/>
+
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/margin_medium">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <ImageView
+                android:id="@+id/single_wishlist_image"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/dummy"
+                android:layout_weight="1"
+                />
+
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:id="@+id/layout_item_desc"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_weight="2"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/single_wishlist_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Denim Shirt"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    />
+
+                <TextView
+                    android:id="@+id/single_wishlist_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:text="Rs. 8,999"
+                    android:textColor="#4CAF50"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/single_wishlist_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Delivery charge: FREE"
+                    android:textSize="16sp" />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/view_width_small"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:background="@color/grey_light" />
+
+    </LinearLayout>
+
+
+
+
+
+</com.daimajia.swipe.SwipeLayout>
+
