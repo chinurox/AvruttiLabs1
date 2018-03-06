@@ -20,10 +20,10 @@
             style="@style/Widget.AppCompat.Button.Borderless.Colored"/>
 
         <View
-            android:id="@+id/view"
+            android:id="@+id/viewOfButton"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorPrimary"
+            android:layout_height="5dp"
+            android:background="@color/colorPrimaryDark"
             android:visibility="gone">
         </View>
 

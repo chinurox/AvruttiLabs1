@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/cardview_light_background"
+    android:orientation="vertical"
+    tools:context="com.example.gargc.avruttilabs.Activity.CartActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/cart_app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            android:id="@+id/app_bar_textview"
+            android:text="MY CART"
+            android:textColor="@color/gen_white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cart_app_bar"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:id="@+id/similar_subcategory"
+        android:text="SUBCATEGORY"
+        android:textStyle="bold"
+        android:textColor="@color/gen_black"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/similar_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/similar_subcategory"
+        android:visibility="visible">
+    </android.support.v7.widget.RecyclerView>
+</RelativeLayout>

@@ -1,6 +1,7 @@
 package com.example.gargc.avruttilabs.Activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -45,6 +46,8 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
     int dotscount;
     ImageView[] dots;
     Offer offer;
+
+    LinearLayout share,wishlist,similar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,6 +155,28 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
                 addToCart();
             }
         });
+
+        similar=(LinearLayout) findViewById(R.id.similar);
+        wishlist=(LinearLayout) findViewById(R.id.wishlist);
+
+        similar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent =new Intent(ItemDetailsActivity.this,SimilarActivity.class);
+                intent.putExtra("model",offer);
+                startActivity(intent);
+
+
+            }
+        });
+
+        wishlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
 
     }
 

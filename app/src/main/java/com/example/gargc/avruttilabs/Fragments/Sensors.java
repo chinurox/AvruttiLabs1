@@ -45,6 +45,11 @@ public class Sensors extends Fragment {
 
     Context mContext;
 
+    String currentlyClickedButton="";
+
+    View viewClicked;
+    int positionClicked;
+
     public Sensors() {
         // Required empty public constructor
     }
@@ -94,7 +99,7 @@ public class Sensors extends Fragment {
         {
 
             @Override
-            protected void populateViewHolder(final BasicComponentsFragment.MyViewHolder viewHolder, SubCategory model, int position)
+            protected void populateViewHolder(final BasicComponentsFragment.MyViewHolder viewHolder, SubCategory model, final int position)
             {
 
                 Log.i("data",model.getName());
@@ -108,7 +113,36 @@ public class Sensors extends Fragment {
 
                         query = mProductsDatabase.orderByChild("subcategory").equalTo(subcat);
 
-                        setSubCategoryProducts();
+                        positionClicked=position;
+                        if(currentlyClickedButton.equals(""))
+                        {
+                            Log.i("clicked","firsttime");
+                            currentlyClickedButton=subcat;
+                            viewHolder.view.setVisibility(View.VISIBLE);
+                            viewClicked=view;
+                            setSubCategoryProducts();
+                        }
+                        else if(currentlyClickedButton.equals(subcat))
+                        {
+                            Log.i("clicked","onsamebutton");
+                            currentlyClickedButton="";
+                            BasicComponentsFragment.MyViewHolder myViewHolder=(BasicComponentsFragment.MyViewHolder)subcategoryRecyclerView.findContainingViewHolder(viewClicked);
+                            myViewHolder.view.setVisibility(View.GONE);
+                            viewClicked=null;
+                            setProducts();
+
+                        }
+                        else
+                        {
+                            Log.i("clicked","differentbutton");
+                            currentlyClickedButton=subcat;
+                            BasicComponentsFragment.MyViewHolder myViewHolder=(BasicComponentsFragment.MyViewHolder) subcategoryRecyclerView.findContainingViewHolder(viewClicked);
+                            myViewHolder.view.setVisibility(View.GONE);
+                            viewClicked=view;
+                            viewHolder.view.setVisibility(View.VISIBLE);
+                            setSubCategoryProducts();
+                        }
+
                     }
                 });
             }
@@ -118,6 +152,12 @@ public class Sensors extends Fragment {
         subcategoryRecyclerView.setAdapter(firebaseRecyclerAdapter);
 
         // adapter for products
+        setProducts();
+
+
+    }
+
+    private void setProducts() {
 
         FirebaseRecyclerAdapter<Offer,BasicComponentsFragment.MyProductHolder> firebaseRecyclerAdapter1=new FirebaseRecyclerAdapter<Offer,BasicComponentsFragment.MyProductHolder>(
                 Offer.class,
