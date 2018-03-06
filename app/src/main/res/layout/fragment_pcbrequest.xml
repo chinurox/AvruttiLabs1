@@ -1,12 +1,71 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical"
     tools:context="com.example.gargc.avruttilabs.Fragments.PCBRequest">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/gen_white"
+        android:textAllCaps="true"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="Submit request"
+        android:layout_marginLeft="50dp"/>
 
-</FrameLayout>
+    <EditText
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:background="@drawable/border_rectangular_white"
+        android:textColor="@color/gen_black"
+        android:hint="Enter Name"
+        android:paddingLeft="20dp"
+        />
+
+    <EditText
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:background="@drawable/border_rectangular_white"
+        android:textColor="@color/gen_black"
+        android:hint="Enter Quantity"
+        android:inputType="number"
+        android:paddingLeft="20dp"
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        android:textStyle="normal"
+        android:gravity="start|center"
+        android:paddingLeft="20dp"
+        android:background="@drawable/border_rectangular_white"
+        android:layout_marginTop="15dp"
+        android:text="upload file"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:background="@drawable/border_rectangular_white"
+        android:layout_marginTop="55dp"
+        android:textColor="@color/gen_white"
+        android:textSize="18sp"
+        android:backgroundTint="@color/colorAccent"
+        android:text="Submit"/>
+
+</LinearLayout>

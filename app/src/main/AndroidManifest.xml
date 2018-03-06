@@ -33,7 +33,8 @@
         <activity android:name=".Activity.ItemDetailsActivity" />
         <activity android:name=".Activity.CartActivity" />
         <activity android:name=".Activity.SimilarActivity" />
-        <activity android:name=".Activity.WishListActivity"></activity>
+        <activity android:name=".Activity.WishListActivity" />
+        <activity android:name=".Activity.SearchActivity"></activity>
     </application>
 
 </manifest>

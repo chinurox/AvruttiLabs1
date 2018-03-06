@@ -12,8 +12,8 @@ import com.example.gargc.avruttilabs.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PCBRequest extends Fragment {
-
+public class PCBRequest extends Fragment
+{
 
     public PCBRequest() {
         // Required empty public constructor
@@ -22,9 +22,14 @@ public class PCBRequest extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             Bundle savedInstanceState)
+    {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_pcbrequest, container, false);
+        View view = inflater.inflate(R.layout.fragment_pcbrequest, container, false);
+
+
+
+        return  view;
     }
 
 }

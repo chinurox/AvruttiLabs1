@@ -1,6 +1,11 @@
 package com.example.gargc.avruttilabs.Activity;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -11,9 +16,18 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.example.gargc.avruttilabs.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,6 +53,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ViewPager mPager;
     private MainPageAdapter mPageAdapter;
     private TabLayout mTabLayout;
+    private RelativeLayout noConLayout;
+    private TextView tvNoNet;
+    private ImageView imgNoNet;
+    private Button btnNoNet;
+    private SearchView searchView;
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +79,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         };
+
+        noConLayout = (RelativeLayout)findViewById(R.id.no_network_container);
+        tvNoNet = (TextView)findViewById(R.id.no_connection_tv);
+        imgNoNet = (ImageView)findViewById(R.id.no_connection_img);
+        btnNoNet = (Button)findViewById(R.id.retry_icon);
 
         mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(mToolbar);
@@ -81,7 +106,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView.setNavigationItemSelectedListener(this);
 
+        if(!isNetworkAvailable()){
+            tvNoNet.setVisibility(View.VISIBLE);
+            imgNoNet.setVisibility(View.VISIBLE);
+            btnNoNet.setVisibility(View.VISIBLE);
+            noConLayout.setVisibility(View.VISIBLE);
 
+            noConLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    tvNoNet.setVisibility(View.GONE);
+                    imgNoNet.setVisibility(View.GONE);
+                    btnNoNet.setVisibility(View.GONE);
+                    noConLayout.setVisibility(View.GONE);
+                    startActivity(new Intent(MainActivity.this,MainActivity.class));
+                }
+            });
+        }
 
     }
     @Override
@@ -98,10 +139,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+        this.menu = menu;
+
+        searchView = (SearchView)menu.findItem(R.id.action_search).getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query)
+            {
+                if(!TextUtils.isEmpty(query)) {
+                    Intent searchIntent = new Intent(MainActivity.this, SearchActivity.class);
+                    Log.i("query", query + "");
+                    searchIntent.putExtra("productName", "" + query);
+                    startActivity(searchIntent);
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch(item.getItemId())
+        {
+            case R.id.action_cart : startActivity(new Intent(MainActivity.this, CartActivity.class));
+                                    break;
+        }
 
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void onStart() {
@@ -116,6 +190,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
+
 
     private void sendToStart() {
         Intent startIntent=new Intent(MainActivity.this,LoginActivity.class);
@@ -143,4 +218,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
 }

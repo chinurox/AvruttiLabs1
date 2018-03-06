@@ -36,9 +36,12 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 import com.squareup.picasso.Picasso;
@@ -95,11 +98,6 @@ public class DoItYourself extends Fragment {
         itemListRecyclerView.setLayoutManager(gridLayoutManager);
         itemListRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
         itemListRecyclerView.setHasFixedSize(true);
-
-        if(isNetworkAvailable())
-        {
-            showDialog();
-        }
 
         mAuth = FirebaseAuth.getInstance();
         uid = mAuth.getCurrentUser().getUid();
@@ -195,6 +193,22 @@ public class DoItYourself extends Fragment {
                 viewHolder.stockDetails.setText(model.getStatus());
                 Log.i("image",model.getImage());
                 Picasso.with(getContext()).load(model.getImage()).placeholder(R.mipmap.image_not_available).into(viewHolder.imageView);
+
+                wishListDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.i("datasnapshot",dataSnapshot.toString());
+                        if(dataSnapshot.child(model.getTitle()).exists()) {
+                            viewHolder.likeButton.setLiked(true);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
 
                 // setting on click on item view
                 viewHolder.view.setOnClickListener(new View.OnClickListener() {
@@ -355,28 +369,6 @@ public class DoItYourself extends Fragment {
         }
     }
 
-    public boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
-    public void showDialog()
-    {
-        final AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-
-        alertDialog.setTitle("No Internet!!");
-        alertDialog.setMessage("Please chek you internet connection");
-        alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                alertDialog.dismiss();
-            }
-        });
-
-        // Showing Alert Message
-        alertDialog.show();
-    }
     @Override
     public void onResume() {
         super.onResume();

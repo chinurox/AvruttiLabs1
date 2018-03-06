@@ -37,9 +37,12 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 import com.squareup.picasso.Picasso;
@@ -53,18 +56,18 @@ import java.util.HashMap;
 
 public class BasicComponentsFragment extends Fragment {
 
-    RecyclerView subcategoryRecyclerView;
-    RecyclerView itemListRecyclerView;
-    DatabaseReference mDatabase,mProductsDatabase;
-    Query query;
+    private RecyclerView subcategoryRecyclerView;
+    private RecyclerView itemListRecyclerView;
+    private DatabaseReference mDatabase,mProductsDatabase;
+    private Query query;
 
-    Context mContext;
+    private Context mContext;
 
 
-    String currentlyClickedButton="";
+    private String currentlyClickedButton="";
 
-    View viewClicked;
-    int positionClicked;
+    private View viewClicked;
+    private int positionClicked;
 
     private DatabaseReference wishListDatabase;
     private FirebaseAuth mAuth;
@@ -79,7 +82,7 @@ public class BasicComponentsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view= inflater.inflate(R.layout.fragmentlayout, container, false);
+        View view = inflater.inflate(R.layout.fragmentlayout, container, false);
         mContext=getContext();
 
         Log.i("offers","yu");
@@ -115,14 +118,7 @@ public class BasicComponentsFragment extends Fragment {
     {
         super.onStart();
 
-        if(isNetworkAvailable())
-        {
-            loadProducts();
-        }
-        else
-        {
-            showDialog();
-        }
+        loadProducts();
 
     }
 
@@ -182,8 +178,6 @@ public class BasicComponentsFragment extends Fragment {
                             setSubCategoryProducts();
                         }
 
-
-
                     }
                 });
             }
@@ -196,7 +190,6 @@ public class BasicComponentsFragment extends Fragment {
 
         setProducts();
 
-
     }
 
     private void setProducts()
@@ -208,13 +201,30 @@ public class BasicComponentsFragment extends Fragment {
                 mProductsDatabase
         ) {
             @Override
-            protected void populateViewHolder(final MyProductHolder viewHolder, final Offer model, int position) {
+            protected void populateViewHolder(final MyProductHolder viewHolder, final Offer model, int position)
+            {
                 Log.i("product",model.toString());
                 viewHolder.item.setText(model.getTitle());
                 viewHolder.itemCost.setText(model.getPrice());
                 viewHolder.stockDetails.setText(model.getStatus());
                 Log.i("image",model.getImage());
                 Picasso.with(getContext()).load(model.getImage()).placeholder(R.mipmap.image_not_available).into(viewHolder.imageView);
+
+                //setting the heart icon
+                wishListDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.i("datasnapshot",dataSnapshot.toString());
+                        if(dataSnapshot.child(model.getTitle()).exists()) {
+                            viewHolder.likeButton.setLiked(true);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 
                 // setting on click on item view
                 viewHolder.view.setOnClickListener(new View.OnClickListener() {
@@ -251,13 +261,14 @@ public class BasicComponentsFragment extends Fragment {
 
 
         };
+
         firebaseRecyclerAdapter1.notifyDataSetChanged();
         itemListRecyclerView.setAdapter(firebaseRecyclerAdapter1);
 
     }
 
-    private void addToWishList(Offer offer) {
-
+    private void addToWishList(Offer offer)
+    {
 
         DatabaseReference userCartDB = wishListDatabase.child(offer.getTitle());
         HashMap cartMap = new HashMap();
@@ -374,29 +385,6 @@ public class BasicComponentsFragment extends Fragment {
             likeButton=(LikeButton) itemView.findViewById(R.id.likebutton);
 
         }
-    }
-
-    public boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
-    public void showDialog()
-    {
-        final AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-
-        alertDialog.setTitle("No Internet!!");
-        alertDialog.setMessage("please check your internet connection");
-        alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                alertDialog.dismiss();
-            }
-        });
-
-        // Showing Alert Message
-        alertDialog.show();
     }
 
     @Override

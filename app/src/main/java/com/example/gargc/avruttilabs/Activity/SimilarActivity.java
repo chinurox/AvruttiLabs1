@@ -3,6 +3,7 @@ package com.example.gargc.avruttilabs.Activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -15,28 +16,40 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.gargc.avruttilabs.Fragments.BasicComponentsFragment;
 import com.example.gargc.avruttilabs.Model.Offer;
 import com.example.gargc.avruttilabs.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.like.LikeButton;
+import com.like.OnLikeListener;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
 
 public class SimilarActivity extends AppCompatActivity {
 
-    Offer offer;
+    private Offer offer;
 
-    TextView category,subcategory;
-    RecyclerView subcategoryRecyclerView;
+    private TextView category,subcategory;
+    private RecyclerView subcategoryRecyclerView;
 
-    DatabaseReference mProductsDatabase;
-    Query query;
+    private DatabaseReference mProductsDatabase,wishListDatabase;
+    private Query query;
+    private FirebaseAuth mAuth;
+    private String uid;
 
-    GridLayoutManager mLayoutManager;
+    private GridLayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +63,12 @@ public class SimilarActivity extends AppCompatActivity {
 
         subcategoryRecyclerView=(RecyclerView) findViewById(R.id.similar_list);
 
+
+        mAuth = FirebaseAuth.getInstance();
+        uid = mAuth.getCurrentUser().getUid();
         mProductsDatabase= FirebaseDatabase.getInstance().getReference().child("Products").child(offer.getCategory());
         query = mProductsDatabase.orderByChild("subcategory").equalTo(offer.getSubcategory());
-
-
+        wishListDatabase = FirebaseDatabase.getInstance().getReference().child("WishList").child(uid);
 
         category.setText(offer.getCategory());
         subcategory.setText("Subcategory"+"-->"+offer.getSubcategory());
@@ -84,6 +99,37 @@ public class SimilarActivity extends AppCompatActivity {
                 Log.i("image",model.getImage());
                 Picasso.with(SimilarActivity.this).load(model.getImage()).placeholder(R.mipmap.image_not_available).into(viewHolder.imageView);
 
+                wishListDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.i("datasnapshot",dataSnapshot.toString());
+                        if(dataSnapshot.child(model.getTitle()).exists()) {
+                            viewHolder.likeButton.setLiked(true);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                viewHolder.likeButton.setOnLikeListener(new OnLikeListener() {
+                    @Override
+                    public void liked(LikeButton likeButton) {
+                        addToWishList(model);
+
+                    }
+
+                    @Override
+                    public void unLiked(LikeButton likeButton) {
+
+                        wishListDatabase.child(model.getTitle()).removeValue();
+                        Toast.makeText(SimilarActivity.this, "item removed", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
                 // setting on click on item view
                 viewHolder.view.setOnClickListener(new View.OnClickListener() {
                     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
@@ -106,6 +152,33 @@ public class SimilarActivity extends AppCompatActivity {
         subcategoryRecyclerView.setAdapter(firebaseRecyclerAdapter1);
 
     }
+
+    private void addToWishList(Offer offer)
+    {
+        DatabaseReference userCartDB = wishListDatabase.child(offer.getTitle());
+        HashMap cartMap = new HashMap();
+        cartMap.put("title",offer.getTitle());
+        cartMap.put("image",offer.getImage());
+        cartMap.put("price",offer.getPrice());
+        cartMap.put("status",offer.getStatus());
+        cartMap.put("category",offer.getCategory());
+        cartMap.put("subCategory",offer.getSubcategory());
+        userCartDB.setValue(cartMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task)
+            {
+                if (task.isSuccessful())
+                {
+                    Toast.makeText(SimilarActivity.this, "Item added to WishList", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Toast.makeText(SimilarActivity.this, "couldnot be added", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
 
     public static class MyProductHolder extends RecyclerView.ViewHolder{
         ImageView imageView;
