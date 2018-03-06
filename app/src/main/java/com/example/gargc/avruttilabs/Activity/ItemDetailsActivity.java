@@ -59,7 +59,7 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
         setContentView(R.layout.activity_item_details);
 
         offer=(Offer) getIntent().getSerializableExtra("Item");
-        Log.i("log",offer.getPrice());
+        Log.i("log",offer.getPrice()+"");
 
         sliderDotspanel=(LinearLayout) findViewById(R.id.SliderDots);
 

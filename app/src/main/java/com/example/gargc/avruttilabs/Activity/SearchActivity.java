@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.gargc.avruttilabs.Model.Offer;
 import com.example.gargc.avruttilabs.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -84,10 +85,22 @@ public class SearchActivity extends AppCompatActivity
                         Log.i("product found",snapshot.toString());
 
                         final DataSnapshot product =  snapshot.child(productName);
+
+                        final Offer offer = product.getValue(Offer.class);
+
                         item.setText(product.child("title").getValue().toString());
                         itemCost.setText(product.child("price").getValue().toString());
                         Picasso.with(SearchActivity.this).load(product.child("image").getValue().toString()).into(imageView);
                         stockDetails.setText(product.child("status").getValue().toString());
+
+                        cardView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(SearchActivity.this,ItemDetailsActivity.class);
+                                intent.putExtra("Item",offer);
+                                startActivity(intent);
+                            }
+                        });
 
                         //setting the heart icon
                         wishListDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
