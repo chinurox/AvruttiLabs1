@@ -305,6 +305,12 @@ public class DoItYourself extends Fragment {
         // Showing Alert Message
         alertDialog.show();
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i("resume","true");
+        onStart();
+    }
 
 
 }

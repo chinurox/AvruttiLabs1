@@ -123,7 +123,7 @@ public class BasicComponentsFragment extends Fragment {
         {
 
             @Override
-            protected void populateViewHolder(final MyViewHolder viewHolder, SubCategory model, int position)
+            protected void populateViewHolder(final MyViewHolder viewHolder, SubCategory model, final int position)
             {
 
                 Log.i("data",model.getName());
@@ -322,4 +322,10 @@ public class BasicComponentsFragment extends Fragment {
         alertDialog.show();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i("resume","true");
+        onStart();
+    }
 }

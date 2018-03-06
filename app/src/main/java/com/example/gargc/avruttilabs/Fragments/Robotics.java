@@ -311,5 +311,12 @@ public class Robotics extends Fragment
         alertDialog.show();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i("resume","true");
+        onStart();
+    }
+
 
 }
