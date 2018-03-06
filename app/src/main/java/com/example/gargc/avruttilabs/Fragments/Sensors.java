@@ -2,8 +2,12 @@ package com.example.gargc.avruttilabs.Fragments;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -75,6 +79,11 @@ public class Sensors extends Fragment {
         itemListRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
         itemListRecyclerView.setHasFixedSize(true);
 
+        if(!isNetworkAvailable())
+        {
+            showDialog();
+        }
+
         return view;
 
     }
@@ -84,17 +93,17 @@ public class Sensors extends Fragment {
     {
         super.onStart();
 
-        FirebaseRecyclerAdapter<SubCategory,BasicComponentsFragment.MyViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<SubCategory, BasicComponentsFragment.MyViewHolder>
+        FirebaseRecyclerAdapter<SubCategory,MyViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<SubCategory, MyViewHolder>
                 (
                         SubCategory.class,
                         R.layout.subcategorybtn,
-                        BasicComponentsFragment.MyViewHolder.class,
+                        MyViewHolder.class,
                         mDatabase
                 )
         {
 
             @Override
-            protected void populateViewHolder(final BasicComponentsFragment.MyViewHolder viewHolder, SubCategory model, int position)
+            protected void populateViewHolder(final MyViewHolder viewHolder, SubCategory model, int position)
             {
 
                 Log.i("data",model.getName());
@@ -119,14 +128,14 @@ public class Sensors extends Fragment {
 
         // adapter for products
 
-        FirebaseRecyclerAdapter<Offer,BasicComponentsFragment.MyProductHolder> firebaseRecyclerAdapter1=new FirebaseRecyclerAdapter<Offer,BasicComponentsFragment.MyProductHolder>(
+        FirebaseRecyclerAdapter<Offer,MyProductHolder> firebaseRecyclerAdapter1=new FirebaseRecyclerAdapter<Offer,MyProductHolder>(
                 Offer.class,
                 R.layout.list_item,
-                BasicComponentsFragment.MyProductHolder.class,
+                MyProductHolder.class,
                 mProductsDatabase
         ) {
             @Override
-            protected void populateViewHolder(final BasicComponentsFragment.MyProductHolder viewHolder, final Offer model, int position) {
+            protected void populateViewHolder(final MyProductHolder viewHolder, final Offer model, int position) {
                 Log.i("product",model.toString());
                 viewHolder.item.setText(model.getTitle());
                 viewHolder.itemCost.setText(model.getPrice());
@@ -159,14 +168,14 @@ public class Sensors extends Fragment {
 
     private void setSubCategoryProducts()
     {
-        FirebaseRecyclerAdapter<Offer,BasicComponentsFragment.MyProductHolder> firebaseRecyclerAdapter1=new FirebaseRecyclerAdapter<Offer,BasicComponentsFragment.MyProductHolder>(
+        FirebaseRecyclerAdapter<Offer,MyProductHolder> firebaseRecyclerAdapter1=new FirebaseRecyclerAdapter<Offer,MyProductHolder>(
                 Offer.class,
                 R.layout.list_item,
-                BasicComponentsFragment.MyProductHolder.class,
+                MyProductHolder.class,
                 query
         ) {
             @Override
-            protected void populateViewHolder(final BasicComponentsFragment.MyProductHolder viewHolder, final Offer model, int position) {
+            protected void populateViewHolder(final MyProductHolder viewHolder, final Offer model, int position) {
                 Log.i("product",model.toString());
                 viewHolder.item.setText(model.getTitle());
                 viewHolder.itemCost.setText(model.getPrice());
@@ -236,6 +245,30 @@ public class Sensors extends Fragment {
 
         }
     }
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public void showDialog()
+    {
+        final AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+
+        alertDialog.setTitle("No Internet!!");
+        alertDialog.setMessage("Please chek you internet connection");
+        alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                alertDialog.dismiss();
+            }
+        });
+
+        // Showing Alert Message
+        alertDialog.show();
+    }
+
 
 }
 
