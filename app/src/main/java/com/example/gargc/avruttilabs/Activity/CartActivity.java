@@ -148,7 +148,7 @@ public class CartActivity extends AppCompatActivity
                     totalCost = totalCost + price;
                 }
 
-                cartCost.setText(totalCost+"");
+                cartCost.setText("Rs"+" "+totalCost+"");
             }
 
             @Override
