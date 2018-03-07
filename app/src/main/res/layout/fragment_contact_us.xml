@@ -1,12 +1,64 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.gargc.avruttilabs.Fragments.ContactUs">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        >
 
-</FrameLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:textAllCaps="true"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="contact us"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="50dp"/>
+
+        <EditText
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:id="@+id/contact_order_id"
+            android:background="@drawable/border_rectangular_white"
+            android:textColor="@color/gen_black"
+            android:hint="Enter Order ID"
+            android:paddingLeft="20dp"
+            />
+
+        <DatePicker
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/contact_date"
+            android:datePickerMode="spinner"
+            android:layout_margin="20dp">
+        </DatePicker>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:background="@drawable/border_rectangular_white"
+            android:layout_marginTop="25dp"
+            android:textColor="@color/gen_white"
+            android:textSize="18sp"
+            android:id="@+id/contact_submit"
+            android:backgroundTint="@color/colorAccent"
+            android:text="Submit"
+            android:layout_marginBottom="20dp"/>
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>
