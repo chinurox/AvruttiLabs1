@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/AvruttiLabs-ECommerce-master.iml" filepath="$PROJECT_DIR$/AvruttiLabs-ECommerce-master.iml" />
       <module fileurl="file://$PROJECT_DIR$/AvruttiLabs1.iml" filepath="$PROJECT_DIR$/AvruttiLabs1.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sdkui/sdkui.iml" filepath="$PROJECT_DIR$/sdkui/sdkui.iml" />
     </modules>
   </component>
 </project>

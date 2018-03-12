@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.gargc.avruttilabs.Activity.ItemDetailsActivity;
+import com.example.gargc.avruttilabs.Activity.LoginActivity;
 import com.example.gargc.avruttilabs.Model.Offer;
 import com.example.gargc.avruttilabs.Model.SubCategory;
 import com.example.gargc.avruttilabs.R;
@@ -102,9 +103,15 @@ public class Tools extends Fragment {
         itemListRecyclerView.setHasFixedSize(true);
 
         mAuth = FirebaseAuth.getInstance();
-        uid = mAuth.getCurrentUser().getUid();
-        wishListDatabase = FirebaseDatabase.getInstance().getReference().child("WishList").child(uid);
-
+        if(mAuth.getCurrentUser()==null)
+        {
+            Intent startIntent=new Intent(getActivity(),LoginActivity.class);
+            startActivity(startIntent);
+        }
+        else {
+            uid = mAuth.getCurrentUser().getUid();
+            wishListDatabase = FirebaseDatabase.getInstance().getReference().child("WishList").child(uid);
+        }
         return view;
 
     }
