@@ -26,6 +26,13 @@
             android:id="@+id/nav_item6"
             android:icon="@drawable/ic_more_black_24dp"
             android:title="@string/item_6" />
+
+        <item
+            android:id="@+id/nav_item7"
+            android:icon="@drawable/ic_more_black_24dp"
+            android:title="@string/item_7" />
+
+
     </group>
 
     <item android:title="@string/my_profile">
@@ -42,10 +49,10 @@
                 android:id="@+id/my_wishlist"
                 android:icon="@drawable/ic_favorite_black_24dp"
                 android:title="@string/my_wishlist" />
-            <item
-                android:id="@+id/my_rewards"
-                android:icon="@drawable/ic_card_giftcard_black_24dp"
-                android:title="@string/my_rewards" />
+            <!--<item-->
+                <!--android:id="@+id/my_rewards"-->
+                <!--android:icon="@drawable/ic_card_giftcard_black_24dp"-->
+                <!--android:title="@string/my_rewards" />-->
             <item
                 android:id="@+id/my_account"
                 android:icon="@drawable/ic_person_black_24dp"

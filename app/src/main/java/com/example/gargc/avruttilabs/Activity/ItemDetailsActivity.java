@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -33,8 +34,11 @@ import com.example.gargc.avruttilabs.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.paytm.pgsdk.PaytmOrder;
 import com.paytm.pgsdk.PaytmPGService;
 import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
@@ -84,8 +88,10 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
     // Used when generating hash from SDK
     private PayUChecksum checksum;
 
+
+
     private Spinner itemQty;
-    private DatabaseReference cartDatabase;
+    private DatabaseReference cartDatabase,emailDatabase;
     private FirebaseAuth mAuth;
     private String uid;
     TextView itemTitle,itemCost,status,itemDescription,addCart,btnBuy;
@@ -124,6 +130,7 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
         mAuth = FirebaseAuth.getInstance();
         uid = mAuth.getCurrentUser().getUid();
         cartDatabase = FirebaseDatabase.getInstance().getReference().child("Cart").child(uid);
+        emailDatabase=FirebaseDatabase.getInstance().getReference().child("Email");
 
         viewPager=(ViewPager) findViewById(R.id.viewpager);
 
@@ -861,19 +868,62 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
                  * PayU sends the same response to merchant server and in app. In response check the value of key "status"
                  * for identifying status of transaction. There are two possible status like, success or failure
                  * */
-                new AlertDialog.Builder(this)
-                        .setCancelable(false)
-                        .setMessage("Payu's Data : " + data.getStringExtra("payu_response") + "\n\n\n Merchant's Data: " + data.getStringExtra("result"))
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                dialog.dismiss();
-                            }
-                        }).show();
+//                new AlertDialog.Builder(this)
+//                        .setCancelable(false)
+//                        .setMessage("Payu's Data : " + data.getStringExtra("payu_response") + "\n\n\n Merchant's Data: " + data.getStringExtra("result"))
+//                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int whichButton) {
+//                                dialog.dismiss();
+//                            }
+//                        }).show();
+                if(resultCode==RESULT_OK)
+                {
+                    emailDatabase.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            Log.i("check", "======="+dataSnapshot.child("email").getValue());
+                            Log.i("check", "======="+dataSnapshot.child("password").getValue());
+
+                            sendEmail(dataSnapshot.child("email").getValue().toString(),dataSnapshot.child("password").getValue().toString());
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+                if(resultCode==RESULT_CANCELED)
+                {
+                    Log.i("fail","fail");
+                    Toast.makeText(this, "Payment Was Not Successful", Toast.LENGTH_LONG).show();
+
+                }
 
             } else {
                 Toast.makeText(this, getString(R.string.could_not_receive_data), Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    protected void sendEmail(String email, String password) {
+
+        String emailOfSender = mAuth.getCurrentUser().getEmail().toString();
+        String subject = "Placement Of Order";
+        String message = offer.getTitle()+" "+offer.getPrice()+" "+offer.getCategory()+" "+offer.getSubcategory()+" "+offer.getDescription()+" "+itemQty.getSelectedItem().toString();
+
+        //Creating SendMail object
+        SendMail sm = new SendMail(this, email, subject, message,email,password);
+
+        //Executing sendmail to send email
+        sm.execute();
+
+
+
+
     }
 
 }

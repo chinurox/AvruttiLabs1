@@ -14,15 +14,17 @@
         android:id="@+id/bottom_wraper"
         android:layout_width="100dp"
         android:orientation="horizontal"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
 
         <TextView
             android:id="@+id/Delete"
             android:layout_width="100dp"
-            android:layout_height="match_parent"
+            android:layout_height="100dp"
             android:background="#ff0000"
             android:gravity="center"
+            android:paddingBottom="8dp"
             android:text="Delete"
             android:textColor="#fff"/>
 

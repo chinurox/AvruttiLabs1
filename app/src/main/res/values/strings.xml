@@ -23,12 +23,14 @@
     <string name="sample_email">hello@gmail.com</string>
 
 
-    <string name="item_1">Offers</string>
-    <string name="item_2">Electronics</string>
-    <string name="item_3">Lifestyle</string>
-    <string name="item_4">Home Appliances</string>
-    <string name="item_5">Books \u0026 More</string>
-    <string name="item_6">More</string>
+    <string name="item_1">Basic Components</string>
+    <string name="item_2">Sensors</string>
+    <string name="item_3">Embedded</string>
+    <string name="item_4">Robotics</string>
+    <string name="item_5">Tools</string>
+    <string name="item_6">Do It Yourself</string>
+    <string name="item_7">PCB Request</string>
+    <string name="item_8">ContactUs</string>
 
 
     <string name="my_profile">My Profile</string>
@@ -59,5 +61,6 @@
     <string name="hint_email">Email</string>
     <string name="btn_back"><![CDATA[<![CDATA[>>Back]]>]></string>
     <string name="logout">Logout</string>
+
 
 </resources>

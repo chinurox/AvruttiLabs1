@@ -1,14 +1,15 @@
 package com.example.gargc.avruttilabs.Activity;
 
-import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -16,7 +17,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -24,11 +24,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.gargc.avruttilabs.Fragments.BasicComponentsFragment;
 import com.example.gargc.avruttilabs.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     public static final String MY_PREFS_NAME = "MyINTRODUCTION";
-    public static final String INTRODUCTION="INTRODUCTION";
+    public static final String INTRODUCTION = "INTRODUCTION";
     private static final String TAG = "MainActivity";
 
     private DrawerLayout drawerLayout;
@@ -80,10 +83,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         };
 
-        noConLayout = (RelativeLayout)findViewById(R.id.no_network_container);
-        tvNoNet = (TextView)findViewById(R.id.no_connection_tv);
-        imgNoNet = (ImageView)findViewById(R.id.no_connection_img);
-        btnNoNet = (Button)findViewById(R.id.retry_icon);
+        noConLayout = (RelativeLayout) findViewById(R.id.no_network_container);
+        tvNoNet = (TextView) findViewById(R.id.no_connection_tv);
+        imgNoNet = (ImageView) findViewById(R.id.no_connection_img);
+        btnNoNet = (Button) findViewById(R.id.retry_icon);
 
         mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(mToolbar);
@@ -106,7 +109,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        if(!isNetworkAvailable()){
+
+        if (!isNetworkAvailable()) {
             tvNoNet.setVisibility(View.VISIBLE);
             imgNoNet.setVisibility(View.VISIBLE);
             btnNoNet.setVisibility(View.VISIBLE);
@@ -119,12 +123,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     imgNoNet.setVisibility(View.GONE);
                     btnNoNet.setVisibility(View.GONE);
                     noConLayout.setVisibility(View.GONE);
-                    startActivity(new Intent(MainActivity.this,MainActivity.class));
+                    startActivity(new Intent(MainActivity.this, MainActivity.class));
                 }
             });
         }
 
     }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -142,12 +147,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         this.menu = menu;
 
-        searchView = (SearchView)menu.findItem(R.id.action_search).getActionView();
+        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query)
-            {
-                if(!TextUtils.isEmpty(query)) {
+            public boolean onQueryTextSubmit(String query) {
+                if (!TextUtils.isEmpty(query)) {
                     Intent searchIntent = new Intent(MainActivity.this, SearchActivity.class);
                     Log.i("query", query + "");
                     searchIntent.putExtra("productName", "" + query);
@@ -166,16 +170,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch(item.getItemId())
-        {
-            case R.id.action_cart : startActivity(new Intent(MainActivity.this, CartActivity.class));
-                                    break;
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_cart:
+                startActivity(new Intent(MainActivity.this, CartActivity.class));
+                break;
+
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     public void onStart() {
@@ -193,26 +198,81 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     private void sendToStart() {
-        Intent startIntent=new Intent(MainActivity.this,LoginActivity.class);
+        Intent startIntent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(startIntent);
         finish();
     }
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item)
-    {
-        switch(item.getItemId())
-        {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
 
-            case R.id.my_cart : startActivity(new Intent(MainActivity.this, CartActivity.class));
-                                break;
+            case R.id.my_cart:
+                startActivity(new Intent(MainActivity.this, CartActivity.class));
+                break;
 
-            case R.id.logout_btn : mAuth.signOut();
-                                   Intent loginIntent = new Intent(MainActivity.this,LoginActivity.class);
-                                   loginIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                   startActivity(loginIntent);
-                                   finish();
-                                   break;
+            case R.id.logout_btn:
+                mAuth.signOut();
+                Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+                loginIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(loginIntent);
+                finish();
+                break;
+//            case R.id.nav_item1 :
+//                BasicComponentsFragment fragment = new BasicComponentsFragment();
+//                android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//                ft.replace(R.id.view_pager, fragment);
+//                ft.commit();
+//                break;
+//
+//
+//
+//
+//            case R.id.nav_item2 :
+//                Sensors fragment2 = new Sensors();
+//                Log.i("click","click1");
+//                FragmentTransaction transaction2 = getSupportFragmentManager().beginTransaction();
+//                transaction2.replace(R.id.main_pager, fragment2);
+//                transaction2.commit();
+//                mPageAdapter = new MainPageAdapter(getSupportFragmentManager());
+//                mPager.setAdapter(mPageAdapter);
+//                mPager.setCurrentItem(1,true);
+//                break;
+//            case R.id.nav_item3 :
+//                Embedded fragment3 = new Embedded();
+//                FragmentTransaction transaction3 = getSupportFragmentManager().beginTransaction();
+//                transaction3.replace(R.id.main_pager, fragment3);
+//                transaction3.commit();
+//                break;
+//            case R.id.nav_item4 :
+//                Robotics fragment4 = new Robotics();
+//                FragmentTransaction transaction4 = getSupportFragmentManager().beginTransaction();
+//                transaction4.replace(R.id.main_pager, fragment4);
+//                transaction4.commit();
+//                break;
+//            case R.id.nav_item5 :
+//                Tools fragment5 = new Tools();
+//                FragmentTransaction transaction5 = getSupportFragmentManager().beginTransaction();
+//                transaction5.replace(R.id.main_pager, fragment5);
+//                transaction5.commit();
+//                break;
+//            case R.id.nav_item6 :
+//                DoItYourself fragment6 = new DoItYourself();
+//                FragmentTransaction transaction6 = getSupportFragmentManager().beginTransaction();
+//                transaction6.replace(R.id.main_pager, fragment6);
+//                transaction6.commit();
+//                break;
+//            case R.id.nav_item7 :
+//                PCBRequest fragment7 = new PCBRequest();
+//                FragmentTransaction transaction7 = getSupportFragmentManager().beginTransaction();
+//                transaction7.replace(R.id.main_pager, fragment7);
+//                transaction7.commit();
+//                break;
+
+
+            case R.id.my_wishlist:
+                startActivity(new Intent(MainActivity.this, WishListActivity.class));
+                break;
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -225,5 +285,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
+
+
+
 
 }
