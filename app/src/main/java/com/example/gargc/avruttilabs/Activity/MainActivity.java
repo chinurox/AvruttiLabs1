@@ -273,6 +273,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.my_wishlist:
                 startActivity(new Intent(MainActivity.this, WishListActivity.class));
                 break;
+
+            case R.id.my_orders :
+                startActivity(new Intent(MainActivity.this, OrdersActivity.class));
+                break;
+
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);

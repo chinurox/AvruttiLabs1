@@ -78,20 +78,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ItemDetailsActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener,PaytmPaymentTransactionCallback {
 
     private String merchantKey, userCredentials;
-
     // These will hold all the payment parameters
     private PaymentParams mPaymentParams;
-
     // This sets the configuration
     private PayuConfig payuConfig;
-
     // Used when generating hash from SDK
     private PayUChecksum checksum;
 
-
-
     private Spinner itemQty;
-    private DatabaseReference cartDatabase,emailDatabase;
+    private DatabaseReference cartDatabase,emailDatabase,ordersDatabase;
     private FirebaseAuth mAuth;
     private String uid;
     TextView itemTitle,itemCost,status,itemDescription,addCart,btnBuy;
@@ -130,7 +125,8 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
         mAuth = FirebaseAuth.getInstance();
         uid = mAuth.getCurrentUser().getUid();
         cartDatabase = FirebaseDatabase.getInstance().getReference().child("Cart").child(uid);
-        emailDatabase=FirebaseDatabase.getInstance().getReference().child("Email");
+        emailDatabase = FirebaseDatabase.getInstance().getReference().child("Email");
+        ordersDatabase = FirebaseDatabase.getInstance().getReference().child("Orders");
 
         viewPager=(ViewPager) findViewById(R.id.viewpager);
 
@@ -887,7 +883,6 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
 
                             sendEmail(dataSnapshot.child("email").getValue().toString(),dataSnapshot.child("password").getValue().toString());
 
-
                         }
 
                         @Override
@@ -896,20 +891,22 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
                         }
                     });
                 }
+
                 if(resultCode==RESULT_CANCELED)
                 {
                     Log.i("fail","fail");
                     Toast.makeText(this, "Payment Was Not Successful", Toast.LENGTH_LONG).show();
-
                 }
 
-            } else {
+            }
+            else {
                 Toast.makeText(this, getString(R.string.could_not_receive_data), Toast.LENGTH_LONG).show();
             }
         }
     }
 
-    protected void sendEmail(String email, String password) {
+    protected void sendEmail(String email, String password)
+    {
 
         String emailOfSender = mAuth.getCurrentUser().getEmail().toString();
         String subject = "Placement Of Order";
@@ -921,9 +918,25 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
         //Executing sendmail to send email
         sm.execute();
 
-
-
-
+        DatabaseReference userOrder = ordersDatabase.child(uid).child(offer.getTitle());
+        HashMap orderMap = new HashMap();
+        orderMap.put("title",offer.getTitle());
+        orderMap.put("price",offer.getPrice());
+        orderMap.put("category",offer.getCategory());
+        orderMap.put("image",offer.getImage());
+        orderMap.put("subcategory",offer.getSubcategory());
+        orderMap.put("quantity",itemQty.getSelectedItem().toString());
+        userOrder.setValue(orderMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Toast.makeText(ItemDetailsActivity.this, "order placed", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(ItemDetailsActivity.this, "order could not be placed", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
 }
