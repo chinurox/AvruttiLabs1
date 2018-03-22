@@ -1,9 +1,11 @@
 package com.example.gargc.avruttilabs.Activity;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -71,6 +74,8 @@ public class CartActivity extends AppCompatActivity
     private Long totalCost = 0l;
     private int count;
 
+    String addressName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -130,10 +135,42 @@ public class CartActivity extends AppCompatActivity
 
         cartCheckout.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 Log.i("working","working");
 
-                navigateToBaseActivity(view);
+                AlertDialog.Builder alertDialogBuilder=new AlertDialog.Builder(CartActivity.this);
+
+                alertDialogBuilder.setTitle("Enter the Address along with PinCode");
+                final View inflater=View.inflate(CartActivity.this,R.layout.alertdialogview,null);
+                alertDialogBuilder.setView(inflater).
+                        setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                EditText address=(EditText)inflater.findViewById(R.id.address);
+                                addressName=address.getText().toString();
+                                if(addressName.equals(""))
+                                {
+                                    Toast.makeText(CartActivity.this, "Enter the Address", Toast.LENGTH_SHORT).show();
+                                }
+                                else
+                                {
+                                    navigateToBaseActivity(view);
+                                }
+
+
+
+                            }
+                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+
+                    }
+                });
+
+                AlertDialog alertDialog=alertDialogBuilder.create();
+                alertDialog.show();
+
             }
         });
     }
@@ -248,7 +285,6 @@ public class CartActivity extends AppCompatActivity
         mPaymentParams = new PaymentParams();
         /**
          * For Test Environment, merchantKey = please contact mobile.integration@payu.in with your app name and registered email id
-
          */
         mPaymentParams.setKey(merchantKey);
         mPaymentParams.setAmount(totalCost+"");
@@ -657,11 +693,29 @@ public class CartActivity extends AppCompatActivity
                     });
                 }
 
-                if(resultCode==RESULT_CANCELED)
-                {
+                if(resultCode==RESULT_CANCELED) {
 
-                    Log.i("fail","fail");
+                    Log.i("fail", "fail");
                     Toast.makeText(this, "Payment Was Not Successful", Toast.LENGTH_LONG).show();
+
+//                    emailDatabase.addValueEventListener(new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(DataSnapshot dataSnapshot) {
+//
+//                            Log.i("check", "======="+dataSnapshot.child("email").getValue());
+//                            Log.i("check", "======="+dataSnapshot.child("password").getValue());
+//
+//                            sendEmail(dataSnapshot.child("email").getValue().toString(),dataSnapshot.child("password").getValue().toString());
+//
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(DatabaseError databaseError) {
+//
+//                        }
+//                    });
+
+
                 }
 
             }
@@ -671,11 +725,15 @@ public class CartActivity extends AppCompatActivity
         }
     }
 
-    protected void sendEmail(String email, String password)
+    protected void sendEmail(String email1, final String password1)
     {
+        final String email=email1;
+        final String password=password1;
 
-        String emailOfSender = mAuth.getCurrentUser().getEmail().toString();
-        String subject = "Placement Of Order";
+        final String emailOfSender = mAuth.getCurrentUser().getEmail().toString();
+        Log.i("mailofsender",emailOfSender);
+        final String email3="Avruttilabs@gmail.com";
+        final String subject = "Placement Of Order";
         message = "Customer Details";
 
         DatabaseReference userDetails = userDatabase;
@@ -685,9 +743,25 @@ public class CartActivity extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
-                message = message + "Customer name "+dataSnapshot.child("name").getValue()
-                        +"<br/>"+"Customer email "+dataSnapshot.child("emailId").getValue()
-                        +"<br/>"+"Customer phone number "+dataSnapshot.child("phonenumber").getValue();
+                message = message + "\n\nCustomer name --> "+dataSnapshot.child("name").getValue()
+                        +"\n\nCustomer email--> "+dataSnapshot.child("emailId").getValue()
+                        +"\n\nCustomer phone number--> "+dataSnapshot.child("phonenumber").getValue()
+                        +"\n\nCustomer Address-->"+addressName;
+
+                Log.i("message",message);
+
+                //Creating SendMail object
+                SendMail sm = new SendMail(CartActivity.this, email3, subject, message,email,password);
+
+                //Executing sendmail to send email
+                sm.execute();
+
+                //Creating SendMail object
+                String subject1="Thank you for shopping from Avrutti.You will receive the shipping details shortly";
+                SendMail sm1 = new SendMail(CartActivity.this, emailOfSender,subject1 , message,email,password);
+
+                //Executing sendmail to send email
+                sm1.execute();
             }
 
             @Override
@@ -708,10 +782,10 @@ public class CartActivity extends AppCompatActivity
                     Log.i("snapshot",snapshot.toString());
 
                     count++;
-                    message = message +"<br/>"+"Product "+count +"<br/>"+"Name "+snapshot.child("title").getValue()
-                            +"<br/>"+"quantity "+snapshot.child("quantity").getValue()
-                            +"<br/>"+"price "+snapshot.child("price").getValue()
-                            +"<br/>"+"price "+snapshot.child("price").getValue();
+                    message = message +"\n\nProduct --> "+count +"\n\nName -->"+snapshot.child("title").getValue()
+                            +"\n\nquantity --> "+snapshot.child("quantity").getValue()
+                            +"\n\nprice --> "+snapshot.child("price").getValue();
+                            //+"\n\nTotal price "+totalCost;
 
                     HashMap orderMap = new HashMap();
                     orderMap.put("category",snapshot.child("category").getValue().toString());
@@ -720,9 +794,10 @@ public class CartActivity extends AppCompatActivity
                     orderMap.put("quantity",snapshot.child("quantity").getValue().toString());
                     orderMap.put("subcategory",snapshot.child("subCategory").getValue().toString());
                     orderMap.put("title",snapshot.child("title").getValue().toString());
-
+                    
                     userOrders.child(snapshot.child("title").getValue().toString()).setValue(orderMap);
                 }
+                message=message+"\n\nTotal price "+totalCost;
 
             }
 
@@ -734,11 +809,11 @@ public class CartActivity extends AppCompatActivity
 
         priceDatabase.removeValue();
 
-        //Creating SendMail object
-        SendMail sm = new SendMail(this, email, subject, message,email,password);
-
-        //Executing sendmail to send email
-        sm.execute();
+//        //Creating SendMail object
+//        SendMail sm = new SendMail(this, email, subject, message,email,password);
+//
+//        //Executing sendmail to send email
+//        sm.execute();
     }
 
 

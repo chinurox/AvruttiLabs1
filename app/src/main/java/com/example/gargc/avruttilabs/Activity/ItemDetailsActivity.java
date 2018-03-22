@@ -96,7 +96,10 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
     ImageView[] dots;
     Offer offer;
 
+    String addressName;
     LinearLayout share,wishlist,similar;
+
+    String message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -236,11 +239,43 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
 
         btnBuy.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
+            public void onClick(final View view)
             {
                 Log.i("working","working");
 
-                navigateToBaseActivity(view);
+                AlertDialog.Builder alertDialogBuilder=new AlertDialog.Builder(ItemDetailsActivity.this);
+
+                alertDialogBuilder.setTitle("Enter the Address along with PinCode");
+                final View inflater=View.inflate(ItemDetailsActivity.this,R.layout.alertdialogview,null);
+                alertDialogBuilder.setView(inflater).
+                        setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                EditText address=(EditText)inflater.findViewById(R.id.address);
+                                addressName=address.getText().toString();
+                                if(addressName.equals(""))
+                                {
+                                    Toast.makeText(ItemDetailsActivity.this, "Enter the Address", Toast.LENGTH_SHORT).show();
+                                }
+                                else
+                                {
+                                    navigateToBaseActivity(view);
+                                }
+
+
+
+                            }
+                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+
+                    }
+                });
+
+                AlertDialog alertDialog=alertDialogBuilder.create();
+                alertDialog.show();
+
             }
         });
 
@@ -896,6 +931,7 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
                 {
                     Log.i("fail","fail");
                     Toast.makeText(this, "Payment Was Not Successful", Toast.LENGTH_LONG).show();
+
                 }
 
             }
@@ -905,18 +941,54 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
         }
     }
 
-    protected void sendEmail(String email, String password)
+    protected void sendEmail(final String email, final String password)
     {
 
-        String emailOfSender = mAuth.getCurrentUser().getEmail().toString();
-        String subject = "Placement Of Order";
-        String message = offer.getTitle()+" "+offer.getPrice()+" "+offer.getCategory()+" "+offer.getSubcategory()+" "+offer.getDescription()+" "+itemQty.getSelectedItem().toString();
+        final String email1=email;
+        final String password1=password;
 
-        //Creating SendMail object
-        SendMail sm = new SendMail(this, email, subject, message,email,password);
+        final String emailOfSender = mAuth.getCurrentUser().getEmail().toString();
+       final String subject = "Placement Of Order";
+      //  String message = offer.getTitle()+" "+offer.getPrice()+" "+offer.getCategory()+" "+offer.getSubcategory()+" "+offer.getDescription()+" "+itemQty.getSelectedItem().toString();
 
-        //Executing sendmail to send email
-        sm.execute();
+
+        final String email3="Avruttilabs@gmail.com";
+        DatabaseReference userDetails = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+
+        userDetails.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                message = "\n\nCustomer name -->"+dataSnapshot.child("name").getValue()
+                        +"\n\nCustomer email-->"+dataSnapshot.child("emailId").getValue()
+                        +"\n\nCustomer phone number-->"+dataSnapshot.child("phonenumber").getValue()
+                        +"\n\nProduct 1"
+                        +"\n\nName-->"+offer.getTitle()
+                        +"\n\nquantity-->"+itemQty.getSelectedItem().toString()
+                        +"\n\nprice-->"+offer.getPrice()
+                        +"\n\nTotal Price--> "+offer.getPrice()
+                        +"\n\nCustomer Address-->"+addressName;
+
+
+                SendMail sm = new SendMail(ItemDetailsActivity.this, email3, subject, message,email1,password1);
+
+                //Executing sendmail to send email
+                sm.execute();
+
+                String subject1="Thank you for shopping from Avrutti.You will receive the shipping details shortly";
+                SendMail sm1 = new SendMail(ItemDetailsActivity.this, emailOfSender,subject1 , message,email1,password1);
+
+                //Executing sendmail to send email
+                sm1.execute();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
         DatabaseReference userOrder = ordersDatabase.child(uid).child(offer.getTitle());
         HashMap orderMap = new HashMap();
