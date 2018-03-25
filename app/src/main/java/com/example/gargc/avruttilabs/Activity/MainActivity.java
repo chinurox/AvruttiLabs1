@@ -77,24 +77,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mAuth = FirebaseAuth.getInstance();
 
-
         if (mAuth.getCurrentUser() == null) {
             sendToStart();
         }
 
-//        mAuthListener = new FirebaseAuth.AuthStateListener() {
-//
-//            @Override
-//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-//                FirebaseUser user = firebaseAuth.getCurrentUser();
-//                if (user == null) {
-//                    // User is not signed in
-//                    sendToStart();
-//                }
-//            }
-//        };
-
-        try {
+        else
+        {
             userDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
             noConLayout = (RelativeLayout) findViewById(R.id.no_network_container);
             tvNoNet = (TextView) findViewById(R.id.no_connection_tv);
@@ -156,10 +144,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
         }
-        catch (Exception e)
-        {
-
-        }
 
     }
 
@@ -218,15 +202,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
+        //mAuth.addAuthStateListener(mAuthListener);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (mAuthListener != null) {
+        /*if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
-        }
+        }*/
     }
 
 
