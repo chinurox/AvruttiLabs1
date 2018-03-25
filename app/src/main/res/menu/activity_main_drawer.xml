@@ -5,32 +5,39 @@
         <item
             android:id="@+id/nav_item1"
             android:icon="@drawable/ic_local_offer_black_24dp"
-            android:title="@string/item_1" />
+            android:title="@string/item_1"
+            android:visible="false"/>
         <item
             android:id="@+id/nav_item2"
             android:icon="@drawable/ic_smartphone_black_24dp"
-            android:title="@string/item_2" />
+            android:title="@string/item_2"
+            android:visible="false"/>
         <item
             android:id="@+id/nav_item3"
             android:icon="@drawable/ic_wc_black_24dp"
-            android:title="@string/item_3" />
+            android:title="@string/item_3"
+            android:visible="false"/>
         <item
             android:id="@+id/nav_item4"
             android:icon="@drawable/ic_local_dining_black_24dp"
-            android:title="@string/item_4" />
+            android:title="@string/item_4"
+            android:visible="false"/>
         <item
             android:id="@+id/nav_item5"
             android:icon="@drawable/ic_book_black_24dp"
-            android:title="@string/item_5" />
+            android:title="@string/item_5"
+            android:visible="false"/>
         <item
             android:id="@+id/nav_item6"
             android:icon="@drawable/ic_more_black_24dp"
-            android:title="@string/item_6" />
+            android:title="@string/item_6"
+            android:visible="false"/>
 
         <item
             android:id="@+id/nav_item7"
             android:icon="@drawable/ic_more_black_24dp"
-            android:title="@string/item_7" />
+            android:title="@string/item_7"
+            android:visible="false"/>
 
 
     </group>
@@ -56,7 +63,8 @@
             <item
                 android:id="@+id/my_account"
                 android:icon="@drawable/ic_person_black_24dp"
-                android:title="@string/my_account" />
+                android:title="@string/my_account"
+                android:visible="false"/>
             <item
                 android:id="@+id/logout_btn"
                 android:icon="@drawable/log_out_icon"
