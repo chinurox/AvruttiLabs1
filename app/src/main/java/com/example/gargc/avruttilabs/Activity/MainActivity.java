@@ -77,77 +77,88 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mAuth = FirebaseAuth.getInstance();
 
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
 
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user == null) {
-                    // User is not signed in
-                    sendToStart();
-                }
-            }
-        };
+        if (mAuth.getCurrentUser() == null) {
+            sendToStart();
+        }
 
-        userDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
+//        mAuthListener = new FirebaseAuth.AuthStateListener() {
+//
+//            @Override
+//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+//                FirebaseUser user = firebaseAuth.getCurrentUser();
+//                if (user == null) {
+//                    // User is not signed in
+//                    sendToStart();
+//                }
+//            }
+//        };
 
-        noConLayout = (RelativeLayout) findViewById(R.id.no_network_container);
-        tvNoNet = (TextView) findViewById(R.id.no_connection_tv);
-        imgNoNet = (ImageView) findViewById(R.id.no_connection_img);
-        btnNoNet = (Button) findViewById(R.id.retry_icon);
+        try {
+            userDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
+            noConLayout = (RelativeLayout) findViewById(R.id.no_network_container);
+            tvNoNet = (TextView) findViewById(R.id.no_connection_tv);
+            imgNoNet = (ImageView) findViewById(R.id.no_connection_img);
+            btnNoNet = (Button) findViewById(R.id.retry_icon);
 
-        mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
-        setSupportActionBar(mToolbar);
-        actionBar = getSupportActionBar();
-        actionBar.setTitle("");
+            mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+            setSupportActionBar(mToolbar);
+            actionBar = getSupportActionBar();
+            actionBar.setTitle("");
 
-        mPager = (ViewPager) findViewById(R.id.main_pager);
-        mPageAdapter = new MainPageAdapter(getSupportFragmentManager());
-        mPager.setAdapter(mPageAdapter);
+            mPager = (ViewPager) findViewById(R.id.main_pager);
+            mPageAdapter = new MainPageAdapter(getSupportFragmentManager());
+            mPager.setAdapter(mPageAdapter);
 
-        mTabLayout = (TabLayout) findViewById(R.id.main_tabs);
-        mTabLayout.setupWithViewPager(mPager);
+            mTabLayout = (TabLayout) findViewById(R.id.main_tabs);
+            mTabLayout.setupWithViewPager(mPager);
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+            navigationView = (NavigationView) findViewById(R.id.nav_view);
+            drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        actionBarDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, drawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.setDrawerListener(actionBarDrawerToggle);
-        actionBarDrawerToggle.syncState();
+            actionBarDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, drawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawerLayout.setDrawerListener(actionBarDrawerToggle);
+            actionBarDrawerToggle.syncState();
 
-        navigationView.setNavigationItemSelectedListener(this);
-        View headerView = navigationView.getHeaderView(0);
-        userName = (TextView) headerView.findViewById(R.id.nav_item_name);
+            navigationView.setNavigationItemSelectedListener(this);
+            View headerView = navigationView.getHeaderView(0);
+            userName = (TextView) headerView.findViewById(R.id.nav_item_name);
 
-        userDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.i("datasnapshot",dataSnapshot.toString());
-                userName.setText(dataSnapshot.child("username").getValue().toString());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        if (!isNetworkAvailable()) {
-            tvNoNet.setVisibility(View.VISIBLE);
-            imgNoNet.setVisibility(View.VISIBLE);
-            btnNoNet.setVisibility(View.VISIBLE);
-            noConLayout.setVisibility(View.VISIBLE);
-
-            noConLayout.setOnClickListener(new View.OnClickListener() {
+            userDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onClick(View view) {
-                    tvNoNet.setVisibility(View.GONE);
-                    imgNoNet.setVisibility(View.GONE);
-                    btnNoNet.setVisibility(View.GONE);
-                    noConLayout.setVisibility(View.GONE);
-                    startActivity(new Intent(MainActivity.this, MainActivity.class));
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Log.i("datasnapshot",dataSnapshot.toString());
+                    userName.setText(dataSnapshot.child("username").getValue().toString());
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
                 }
             });
+
+            if (!isNetworkAvailable()) {
+                tvNoNet.setVisibility(View.VISIBLE);
+                imgNoNet.setVisibility(View.VISIBLE);
+                btnNoNet.setVisibility(View.VISIBLE);
+                noConLayout.setVisibility(View.VISIBLE);
+
+                noConLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        tvNoNet.setVisibility(View.GONE);
+                        imgNoNet.setVisibility(View.GONE);
+                        btnNoNet.setVisibility(View.GONE);
+                        noConLayout.setVisibility(View.GONE);
+                        startActivity(new Intent(MainActivity.this, MainActivity.class));
+                    }
+                });
+            }
+
+        }
+        catch (Exception e)
+        {
+
         }
 
     }

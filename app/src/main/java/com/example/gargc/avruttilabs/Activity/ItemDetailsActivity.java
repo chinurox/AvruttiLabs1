@@ -1054,4 +1054,3 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
     }
 
 }
-
