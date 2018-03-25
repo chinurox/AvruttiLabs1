@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -17,9 +18,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -86,7 +89,7 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
     private PayUChecksum checksum;
 
     private Spinner itemQty;
-    private DatabaseReference cartDatabase,emailDatabase,ordersDatabase;
+    private DatabaseReference cartDatabase,emailDatabase,ordersDatabase,couponDatabase;
     private FirebaseAuth mAuth;
     private String uid;
     TextView itemTitle,itemCost,status,itemDescription,addCart,btnBuy;
@@ -95,11 +98,16 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
     int dotscount;
     ImageView[] dots;
     Offer offer;
+    RadioButton standard,express;
+    EditText couponName;
+    Button couponApply;
+    int amount=0;
+    boolean isApplied=false,isStandard=false,isExpress=false;
 
     String addressName;
     LinearLayout share,wishlist,similar;
 
-    String message;
+    String message,finalCost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,12 +132,17 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
         itemDescription = (TextView) findViewById(R.id.itemDetails);
         addCart = (TextView) findViewById(R.id.text_action_bottom1);
         itemQty = (Spinner) findViewById(R.id.item_detail_qty);
+        standard = (RadioButton)findViewById(R.id.standard_radio_button);
+        express = (RadioButton)findViewById(R.id.express_radio_button);
+        couponApply = (Button)findViewById(R.id.item_single_coupon_apply);
+        couponName = (EditText)findViewById(R.id.item_single_coupon_name);
 
         mAuth = FirebaseAuth.getInstance();
         uid = mAuth.getCurrentUser().getUid();
         cartDatabase = FirebaseDatabase.getInstance().getReference().child("Cart").child(uid);
         emailDatabase = FirebaseDatabase.getInstance().getReference().child("Email");
         ordersDatabase = FirebaseDatabase.getInstance().getReference().child("Orders");
+        couponDatabase = FirebaseDatabase.getInstance().getReference().child("Coupons");
 
         viewPager=(ViewPager) findViewById(R.id.viewpager);
 
@@ -223,7 +236,6 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
                 intent.putExtra("model",offer);
                 startActivity(intent);
 
-
             }
         });
 
@@ -236,12 +248,109 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
             }
         });
 
+        couponApply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                final String cName = couponName.getText().toString();
+
+                couponDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot)
+                    {
+                        if(dataSnapshot.child(cName).exists()) {
+                            DatabaseReference coupon = couponDatabase.child(cName);
+
+                            if (!isApplied)
+                            {
+                                String initCost = itemCost.getText().toString();
+                                initCost = initCost.substring(2);
+                                Log.i("initial cost", initCost + "");
+
+                                amount = Integer.parseInt(initCost);
+
+                                Log.i("datasnapshot", dataSnapshot.toString());
+
+                                coupon.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        String status = dataSnapshot.child("status").getValue().toString();
+                                        if (status.equalsIgnoreCase("true")) {
+                                            int disc = Integer.parseInt(dataSnapshot.child("discount").getValue().toString());
+                                            amount = amount - ((amount * disc) / 100);
+                                            itemCost.setText("₹ " + amount);
+                                            isApplied = true;
+                                            Toast.makeText(ItemDetailsActivity.this, "Coupon Applied!!!", Toast.LENGTH_SHORT).show();
+                                        }
+                                        else
+                                        {
+                                            Toast.makeText(ItemDetailsActivity.this, "The Coupon is not valid", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+
+                            } else {
+                                Toast.makeText(ItemDetailsActivity.this, "Coupon does not exists or you have already applied one coupon", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
+        });
 
         btnBuy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view)
             {
                 Log.i("working","working");
+
+                if(amount==0)
+                {
+                    String initCost = itemCost.getText().toString();
+                    initCost = initCost.substring(2);
+                    Log.i("initial cost", initCost + "");
+                    amount = Integer.parseInt(initCost);
+                }
+
+                if(isExpress)
+                {
+                    amount -= 110;
+                    isExpress = false;
+                }
+                else if(isStandard)
+                {
+                    amount -= 60;
+                    isStandard = false;
+                }
+
+                if(standard.isChecked()) {
+                    amount += 60;
+                    isStandard=true;
+                }
+                else if(express.isChecked()){
+                    amount += 110;
+                    isExpress = true;
+                }
+
+                else {
+                    Toast.makeText(ItemDetailsActivity.this, "please select a shipping option", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                finalCost = amount+"";
+                Log.i("finalcost",""+finalCost);
 
                 AlertDialog.Builder alertDialogBuilder=new AlertDialog.Builder(ItemDetailsActivity.this);
 
@@ -281,98 +390,6 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
 
     }
 
-    private void generateCheckSum()
-    {
-        Log.i("going","going");
-        String cost = "1";
-
-        //creating a retrofit object.
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Api.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        //creating the retrofit api service
-        Api apiService = retrofit.create(Api.class);
-
-        //creating paytm object
-        //containing all the values required
-        final Paytm paytm = new Paytm(
-                Constants.M_ID,
-                Constants.CHANNEL_ID,
-                cost,
-                Constants.WEBSITE,
-                Constants.CALLBACK_URL,
-                Constants.INDUSTRY_TYPE_ID
-        );
-
-        //creating a call object from the apiService
-        Call<Checksum> call = apiService.getChecksum(
-                paytm.getmId(),
-                paytm.getOrderId(),
-                paytm.getCustId(),
-                paytm.getChannelId(),
-                paytm.getTxnAmount(),
-                paytm.getWebsite(),
-                paytm.getCallBackUrl(),
-                paytm.getIndustryTypeId()
-        );
-
-        //making the call to generate checksum
-        call.enqueue(new Callback<Checksum>() {
-            @Override
-            public void onResponse(Call<Checksum> call, Response<Checksum> response) {
-
-                //once we get the checksum we will initiailize the payment.
-                //the method is taking the checksum we got and the paytm object as the parameter
-                Log.i("response",""+response.toString());
-                initializePaytmPayment(response.body().getChecksumHash(), paytm);
-                Log.i("going","response");
-
-            }
-
-            @Override
-            public void onFailure(Call<Checksum> call, Throwable t) {
-                Log.i("message",""+t.getMessage());
-                Log.i("going","failure");
-            }
-        });
-    }
-
-
-    private void initializePaytmPayment(String checksumHash, Paytm paytm)
-    {
-        Log.i("going","final");
-
-        //getting paytm service
-        PaytmPGService Service = PaytmPGService.getStagingService();
-
-        //use this when using for production
-        //PaytmPGService Service = PaytmPGService.getProductionService();
-
-        //creating a hashmap and adding all the values required
-        Map<String, String> paramMap = new HashMap<>();
-        paramMap.put("MID", Constants.M_ID);
-        paramMap.put("ORDER_ID", paytm.getOrderId());
-        paramMap.put("CUST_ID", paytm.getCustId());
-        paramMap.put("CHANNEL_ID", paytm.getChannelId());
-        paramMap.put("TXN_AMOUNT", paytm.getTxnAmount());
-        paramMap.put("WEBSITE", paytm.getWebsite());
-        paramMap.put("CALLBACK_URL", paytm.getCallBackUrl());
-        paramMap.put("CHECKSUMHASH", checksumHash);
-        paramMap.put("INDUSTRY_TYPE_ID", paytm.getIndustryTypeId());
-
-
-        //creating a paytm order object using the hashmap
-        PaytmOrder order = new PaytmOrder(paramMap);
-
-        //intializing the paytm service
-        Service.initialize(order, null);
-
-        //finally starting the payment transaction
-        Service.startPaymentTransaction(this, true, true, this);
-
-    }
 
     private void addToCart()
     {
@@ -388,7 +405,7 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
         HashMap cartMap = new HashMap();
         cartMap.put("title",offer.getTitle());
         cartMap.put("image",offer.getImage());
-        cartMap.put("price",offer.getPrice());
+        cartMap.put("price","₹ "+amount);
         cartMap.put("status",offer.getStatus());
         cartMap.put("category",offer.getCategory());
         cartMap.put("quantity",itemQty.getSelectedItem().toString());
@@ -418,6 +435,24 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
         itemCost.setText(offer.getPrice());
         status.setText(offer.getStatus());
         itemDescription.setText(offer.getDescription());
+
+        String initCost = itemCost.getText().toString();
+        initCost = initCost.substring(2);
+        Log.i("initial cost", initCost + "");
+        amount = Integer.parseInt(initCost);
+
+        String itemStatus = status.getText().toString();
+        if(itemStatus.equalsIgnoreCase("Out Of Stock")){
+            Log.i("false","false");
+            status.setTextColor(Color.parseColor("#FF0000"));
+            btnBuy.setText("Out Of Stock");
+            btnBuy.setEnabled(false);
+        }else{
+            Log.i("true","true");
+            status.setTextColor(Color.parseColor("#008000"));
+            btnBuy.setText("BUY NOW");
+            btnBuy.setEnabled(true);
+        }
     }
 
     @Override
@@ -451,6 +486,13 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
         }
     }
 
+    @Override
+    protected void onResume()
+    {
+        itemCost.setText("₹ " + amount);
+
+        super.onResume();
+    }
 
     @Override
     public void onTransactionResponse(Bundle bundle) {
@@ -501,7 +543,7 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
         String costSt = itemCost.getText().toString();
         Log.i("cost",""+costSt);
         Log.i("cost amount",""+costSt.substring(2));
-        String amount = costSt.substring(2);
+        String amount = finalCost;
         String email = "payutest@gmail.com";
 
         int environment=PayuConstants.STAGING_ENV;

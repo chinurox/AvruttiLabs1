@@ -21,11 +21,13 @@
             android:background="@color/colorPrimary"
             app:theme="@style/CustomActionBar">
 
-            <ImageView
-                android:layout_width="80dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/logo_shopping"
-                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:textColor="#FFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_height="wrap_content"
+                android:text="Avrutti Electronics"/>
 
             <com.miguelcatalan.materialsearchview.MaterialSearchView
                 android:id="@+id/main_search_view"

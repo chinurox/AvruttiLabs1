@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,11 +69,12 @@ public class CartActivity extends AppCompatActivity
     private RecyclerView cartList;
     private FirebaseAuth mAuth;
     private String uid , message = "";
-    private LinearLayout paymentLayout , emptyLayout;
+    private LinearLayout paymentLayout,emptyLayout,radioHolder;
     private Button shopNow;
     private TextView cartCost,cartCheckout;
     private Long totalCost = 0l;
     private int count;
+    private RadioButton standard,express;
 
     String addressName;
 
@@ -89,6 +91,9 @@ public class CartActivity extends AppCompatActivity
         shopNow = (Button)findViewById(R.id.start_shop_btn);
         cartCost = (TextView)findViewById(R.id.cart_cost);
         cartCheckout = (TextView)findViewById(R.id.cart_checkout);
+        standard = (RadioButton)findViewById(R.id.standard_radio_button);
+        express = (RadioButton)findViewById(R.id.express_radio_button);
+        radioHolder = (LinearLayout)findViewById(R.id.radio_holder);
 
         mAuth = FirebaseAuth.getInstance();
         uid = mAuth.getCurrentUser().getUid();
@@ -115,12 +120,14 @@ public class CartActivity extends AppCompatActivity
                     cartList.setVisibility(View.VISIBLE);
                     paymentLayout.setVisibility(View.VISIBLE);
                     emptyLayout.setVisibility(View.GONE);
+                    radioHolder.setVisibility(View.VISIBLE);
                 }
                 else
                 {
                     cartList.setVisibility(View.GONE);
                     paymentLayout.setVisibility(View.GONE);
                     emptyLayout.setVisibility(View.VISIBLE);
+                    radioHolder.setVisibility(View.GONE);
                 }
             }
 
@@ -137,6 +144,19 @@ public class CartActivity extends AppCompatActivity
             @Override
             public void onClick(final View view) {
                 Log.i("working","working");
+
+                if(standard.isChecked()) {
+                    totalCost += 60;
+                }
+                else if(express.isChecked()){
+                    totalCost += 110;
+                }
+                else {
+                    Toast.makeText(CartActivity.this, "please select a shipping option", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Log.i("finalcost",""+totalCost);
 
                 AlertDialog.Builder alertDialogBuilder=new AlertDialog.Builder(CartActivity.this);
 
@@ -794,7 +814,7 @@ public class CartActivity extends AppCompatActivity
                     orderMap.put("quantity",snapshot.child("quantity").getValue().toString());
                     orderMap.put("subcategory",snapshot.child("subCategory").getValue().toString());
                     orderMap.put("title",snapshot.child("title").getValue().toString());
-                    
+
                     userOrders.child(snapshot.child("title").getValue().toString()).setValue(orderMap);
                 }
                 message=message+"\n\nTotal price "+totalCost;

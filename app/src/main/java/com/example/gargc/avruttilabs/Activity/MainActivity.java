@@ -35,6 +35,11 @@ import com.example.gargc.avruttilabs.Fragments.BasicComponentsFragment;
 import com.example.gargc.avruttilabs.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -57,11 +62,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private MainPageAdapter mPageAdapter;
     private TabLayout mTabLayout;
     private RelativeLayout noConLayout;
-    private TextView tvNoNet;
+    private TextView tvNoNet,userName;
     private ImageView imgNoNet;
     private Button btnNoNet;
     private SearchView searchView;
     private Menu menu;
+    private DatabaseReference userDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         };
+
+        userDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
 
         noConLayout = (RelativeLayout) findViewById(R.id.no_network_container);
         tvNoNet = (TextView) findViewById(R.id.no_connection_tv);
@@ -108,7 +116,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         actionBarDrawerToggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(this);
+        View headerView = navigationView.getHeaderView(0);
+        userName = (TextView) headerView.findViewById(R.id.nav_item_name);
 
+        userDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.i("datasnapshot",dataSnapshot.toString());
+                userName.setText(dataSnapshot.child("username").getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         if (!isNetworkAvailable()) {
             tvNoNet.setVisibility(View.VISIBLE);
@@ -277,6 +299,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.my_orders :
                 startActivity(new Intent(MainActivity.this, OrdersActivity.class));
                 break;
+
+            case R.id.contact_us : startActivity(new Intent(MainActivity.this, ContactUsActivity.class));
+                break;
+
+            case R.id.terms_conditions : startActivity(new Intent(MainActivity.this, TermsAndConditionsActivity.class));
+                break;
+
 
         }
 

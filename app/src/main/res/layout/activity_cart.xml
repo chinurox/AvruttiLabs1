@@ -29,11 +29,48 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/cart_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/cart_app_bar"
         android:visibility="gone"
         android:layout_marginBottom="50dp">
     </android.support.v7.widget.RecyclerView>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:layout_below="@+id/cart_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/radio_holder"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="23dp">
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="2"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.9"
+                android:id="@+id/standard_radio_button"
+                android:text="Standard Shipping"
+                android:checked="true"/>
+
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_marginLeft="10dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.9"
+                android:text="Express Shipping"
+                android:checked="false"
+                android:id="@+id/express_radio_button"/>
+
+        </RadioGroup>
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/cart_layout_payment"
