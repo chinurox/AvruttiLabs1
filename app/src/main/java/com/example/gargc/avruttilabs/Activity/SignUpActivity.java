@@ -171,4 +171,5 @@ public class SignUpActivity extends AppCompatActivity {
         etUsername.setEnabled(enabled);
         etPassword.setEnabled(enabled);
     }
+
 }

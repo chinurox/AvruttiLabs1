@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -65,16 +66,19 @@ public class CartActivity extends AppCompatActivity
     // Used when generating hash from SDK
     private PayUChecksum checksum;
 
-    private DatabaseReference cartDatabase,emailDatabase,userDatabase,ordersDatabase;
+    private DatabaseReference cartDatabase,emailDatabase,userDatabase,ordersDatabase,couponDatabase;
     private RecyclerView cartList;
     private FirebaseAuth mAuth;
     private String uid , message = "";
-    private LinearLayout paymentLayout,emptyLayout,radioHolder;
+    private LinearLayout paymentLayout,emptyLayout,radioHolder,couponHolder;
     private Button shopNow;
     private TextView cartCost,cartCheckout;
     private Long totalCost = 0l;
     private int count;
+    private EditText couponName;
+    private Button couponApply;
     private RadioButton standard,express;
+    private boolean isStandard=false,isExpress=false,isApplied=false;
 
     String addressName;
 
@@ -94,6 +98,9 @@ public class CartActivity extends AppCompatActivity
         standard = (RadioButton)findViewById(R.id.standard_radio_button);
         express = (RadioButton)findViewById(R.id.express_radio_button);
         radioHolder = (LinearLayout)findViewById(R.id.radio_holder);
+        couponHolder = (LinearLayout)findViewById(R.id.coupon_holder);
+        couponApply = (Button)findViewById(R.id.item_single_coupon_apply);
+        couponName = (EditText)findViewById(R.id.item_single_coupon_name);
 
         mAuth = FirebaseAuth.getInstance();
         uid = mAuth.getCurrentUser().getUid();
@@ -101,7 +108,7 @@ public class CartActivity extends AppCompatActivity
         cartDatabase = FirebaseDatabase.getInstance().getReference().child("Cart").child(uid);
         emailDatabase = FirebaseDatabase.getInstance().getReference().child("Email");
         ordersDatabase = FirebaseDatabase.getInstance().getReference().child("Orders").child(uid);
-        Log.i("check",cartDatabase.child("price")+"");
+        couponDatabase = FirebaseDatabase.getInstance().getReference().child("Coupons");
 
         shopNow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,6 +128,7 @@ public class CartActivity extends AppCompatActivity
                     paymentLayout.setVisibility(View.VISIBLE);
                     emptyLayout.setVisibility(View.GONE);
                     radioHolder.setVisibility(View.VISIBLE);
+                    couponHolder.setVisibility(View.VISIBLE);
                 }
                 else
                 {
@@ -128,6 +136,7 @@ public class CartActivity extends AppCompatActivity
                     paymentLayout.setVisibility(View.GONE);
                     emptyLayout.setVisibility(View.VISIBLE);
                     radioHolder.setVisibility(View.GONE);
+                    couponHolder.setVisibility(View.GONE);
                 }
             }
 
@@ -140,10 +149,29 @@ public class CartActivity extends AppCompatActivity
         cartList.setLayoutManager(new LinearLayoutManager(this));
         cartList.setHasFixedSize(true);
 
+        couponApply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                applyCoupon();
+            }
+        });
+
         cartCheckout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
                 Log.i("working","working");
+
+                if(isExpress)
+                {
+                    totalCost -= 110;
+                    isExpress = false;
+                }
+                else if(isStandard)
+                {
+                    totalCost -= 60;
+                    isStandard = false;
+                }
 
                 if(standard.isChecked()) {
                     totalCost += 60;
@@ -160,24 +188,38 @@ public class CartActivity extends AppCompatActivity
 
                 AlertDialog.Builder alertDialogBuilder=new AlertDialog.Builder(CartActivity.this);
 
-                alertDialogBuilder.setTitle("Enter the Address along with PinCode");
+                alertDialogBuilder.setTitle("Please Enter the Address Details");
                 final View inflater=View.inflate(CartActivity.this,R.layout.alertdialogview,null);
                 alertDialogBuilder.setView(inflater).
-                        setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        setPositiveButton("OK", new DialogInterface.OnClickListener()
+                        {
                             @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                EditText address=(EditText)inflater.findViewById(R.id.address);
-                                addressName=address.getText().toString();
-                                if(addressName.equals(""))
+                            public void onClick(DialogInterface dialogInterface, int i)
+                            {
+                                EditText edtAddress = (EditText)inflater.findViewById(R.id.address);
+                                EditText edtCity = (EditText)inflater.findViewById(R.id.city);
+                                EditText edtState = (EditText)inflater.findViewById(R.id.state);
+                                EditText edtPincode =(EditText)inflater.findViewById(R.id.pincode);
+                                EditText edtCountry=(EditText)inflater.findViewById(R.id.country);
+
+                                String address = edtAddress.getText().toString();
+                                String city = edtCity.getText().toString();
+                                String state = edtState.getText().toString();
+                                String pincode = edtPincode.getText().toString();
+                                String country = edtCountry.getText().toString();
+
+                                addressName="Address : "+address+"  City : "+city+"  State : "+state+"  Country : "+country
+                                        +"  Pincode : "+pincode;
+
+                                if(TextUtils.isEmpty(address)||TextUtils.isEmpty(city)||TextUtils.isEmpty(state)||
+                                        TextUtils.isEmpty(pincode)||TextUtils.isEmpty(country))
                                 {
-                                    Toast.makeText(CartActivity.this, "Enter the Address", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(CartActivity.this, "All the fields are mandatory!", Toast.LENGTH_SHORT).show();
                                 }
                                 else
                                 {
                                     navigateToBaseActivity(view);
                                 }
-
-
 
                             }
                         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -193,6 +235,74 @@ public class CartActivity extends AppCompatActivity
 
             }
         });
+    }
+
+    private void applyCoupon()
+    {
+        final String cName = couponName.getText().toString();
+
+        if(TextUtils.isEmpty(cName))
+        {
+            return;
+        }
+
+        couponDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                if(dataSnapshot.child(cName).exists()) {
+                    DatabaseReference coupon = couponDatabase.child(cName);
+
+                    if (!isApplied)
+                    {
+
+                        Log.i("datasnapshot", dataSnapshot.toString());
+
+                        coupon.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                String status = dataSnapshot.child("status").getValue().toString();
+                                if (status.equalsIgnoreCase("true")) {
+                                    int disc = Integer.parseInt(dataSnapshot.child("discount").getValue().toString());
+                                    totalCost = totalCost - ((totalCost * disc) / 100);
+                                    cartCost.setText("Rs " + totalCost);
+                                    isApplied = true;
+                                    Toast.makeText(CartActivity.this, "Coupon Applied!!!", Toast.LENGTH_SHORT).show();
+                                }
+                                else
+                                {
+                                    Toast.makeText(CartActivity.this, "The Coupon is not valid", Toast.LENGTH_SHORT).show();
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+                    } else {
+                        Toast.makeText(CartActivity.this, "Coupon does not exists or you have already applied one coupon", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        isApplied = false;
+        applyCoupon();
     }
 
     @Override
