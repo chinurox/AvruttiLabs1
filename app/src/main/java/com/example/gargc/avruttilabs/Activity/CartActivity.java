@@ -377,7 +377,7 @@ public class CartActivity extends AppCompatActivity
     {
         ImageView img;
         TextView title,price,status,qty;
-        LinearLayout delete,edit;
+        LinearLayout delete;
 
         public CartViewHolder(View itemView)
         {
@@ -389,7 +389,6 @@ public class CartActivity extends AppCompatActivity
             status = (TextView)itemView.findViewById(R.id.single_cart_status);
             qty = (TextView)itemView.findViewById(R.id.single_cart_quantity);
             delete = (LinearLayout) itemView.findViewById(R.id.single_cart_delete);
-            edit = (LinearLayout) itemView.findViewById(R.id.single_cart_edit);
         }
 
     }

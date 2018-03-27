@@ -235,57 +235,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(loginIntent);
                 finish();
                 break;
-//            case R.id.nav_item1 :
-//                BasicComponentsFragment fragment = new BasicComponentsFragment();
-//                android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//                ft.replace(R.id.view_pager, fragment);
-//                ft.commit();
-//                break;
-//
-//
-//
-//
-//            case R.id.nav_item2 :
-//                Sensors fragment2 = new Sensors();
-//                Log.i("click","click1");
-//                FragmentTransaction transaction2 = getSupportFragmentManager().beginTransaction();
-//                transaction2.replace(R.id.main_pager, fragment2);
-//                transaction2.commit();
-//                mPageAdapter = new MainPageAdapter(getSupportFragmentManager());
-//                mPager.setAdapter(mPageAdapter);
-//                mPager.setCurrentItem(1,true);
-//                break;
-//            case R.id.nav_item3 :
-//                Embedded fragment3 = new Embedded();
-//                FragmentTransaction transaction3 = getSupportFragmentManager().beginTransaction();
-//                transaction3.replace(R.id.main_pager, fragment3);
-//                transaction3.commit();
-//                break;
-//            case R.id.nav_item4 :
-//                Robotics fragment4 = new Robotics();
-//                FragmentTransaction transaction4 = getSupportFragmentManager().beginTransaction();
-//                transaction4.replace(R.id.main_pager, fragment4);
-//                transaction4.commit();
-//                break;
-//            case R.id.nav_item5 :
-//                Tools fragment5 = new Tools();
-//                FragmentTransaction transaction5 = getSupportFragmentManager().beginTransaction();
-//                transaction5.replace(R.id.main_pager, fragment5);
-//                transaction5.commit();
-//                break;
-//            case R.id.nav_item6 :
-//                DoItYourself fragment6 = new DoItYourself();
-//                FragmentTransaction transaction6 = getSupportFragmentManager().beginTransaction();
-//                transaction6.replace(R.id.main_pager, fragment6);
-//                transaction6.commit();
-//                break;
-//            case R.id.nav_item7 :
-//                PCBRequest fragment7 = new PCBRequest();
-//                FragmentTransaction transaction7 = getSupportFragmentManager().beginTransaction();
-//                transaction7.replace(R.id.main_pager, fragment7);
-//                transaction7.commit();
-//                break;
-
 
             case R.id.my_wishlist:
                 startActivity(new Intent(MainActivity.this, WishListActivity.class));

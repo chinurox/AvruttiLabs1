@@ -83,7 +83,7 @@
             android:id="@+id/single_cart_delete"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:gravity="center"
             android:orientation="horizontal"
             android:weightSum="2">
@@ -109,33 +109,6 @@
             android:layout_width="@dimen/view_width_small"
             android:layout_height="match_parent"
             android:background="@color/grey_light" />
-
-        <LinearLayout
-            android:id="@+id/single_cart_edit"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_mode_edit_black_18dp" />
-
-            <TextView
-                android:id="@+id/text_action2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_weight="1"
-                android:gravity="left"
-                android:text="Edit"
-                android:textColor="@color/gen_black"
-                android:textSize="12dp" />
-
-        </LinearLayout>
 
     </LinearLayout>
 

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:id="@+id/swipe"
     app:leftEdgeSwipeOffset="0dp"
+    android:scrollbars="horizontal"
     android:layout_marginTop="5dp"
     app:rightEdgeSwipeOffset="0dp"
     android:layout_height="wrap_content">
@@ -16,7 +17,6 @@
         android:orientation="horizontal"
         android:layout_height="match_parent"
         >
-
 
         <TextView
             android:id="@+id/Delete"

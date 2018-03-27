@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item
+       <!-- <item
             android:id="@+id/nav_item1"
             android:icon="@drawable/ic_local_offer_black_24dp"
             android:title="@string/item_1" />
@@ -31,7 +31,7 @@
             android:id="@+id/nav_item7"
             android:icon="@drawable/ic_more_black_24dp"
             android:title="@string/item_7" />
-
+-->
 
     </group>
 
@@ -49,14 +49,6 @@
                 android:id="@+id/my_wishlist"
                 android:icon="@drawable/ic_favorite_black_24dp"
                 android:title="@string/my_wishlist" />
-            <!--<item-->
-                <!--android:id="@+id/my_rewards"-->
-                <!--android:icon="@drawable/ic_card_giftcard_black_24dp"-->
-                <!--android:title="@string/my_rewards" />-->
-            <item
-                android:id="@+id/my_account"
-                android:icon="@drawable/ic_person_black_24dp"
-                android:title="@string/my_account" />
             <item
                 android:id="@+id/logout_btn"
                 android:icon="@drawable/log_out_icon"
