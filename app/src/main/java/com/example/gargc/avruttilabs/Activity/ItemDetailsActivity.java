@@ -82,21 +82,17 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
 {
 
     private Spinner itemQty;
-    private DatabaseReference cartDatabase,emailDatabase,ordersDatabase,couponDatabase;
+    private DatabaseReference cartDatabase;
     private FirebaseAuth mAuth;
     private String uid;
-    TextView itemTitle,itemCost,status,itemDescription,addCart,btnBuy;
+    TextView itemTitle,itemCost,status,itemDescription,addCart,btnBuy,qtyTxt;
     ViewPager viewPager;
     LinearLayout sliderDotspanel;
     int dotscount;
     ImageView[] dots;
     Offer offer;
-    RadioButton standard,express;
-    EditText couponName;
-    Button couponApply;
     long amount=0L;
-    boolean isApplied=false,isStandard=false,isExpress=false;
-    LinearLayout share,wishlist,similar;
+    LinearLayout wishlist,similar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,8 +106,6 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
         offer=(Offer) getIntent().getSerializableExtra("Item");
         Log.i("log",offer.getPrice()+"");
 
-        Payu.setInstance(this);
-
         sliderDotspanel=(LinearLayout) findViewById(R.id.SliderDots);
 
         btnBuy = (TextView)findViewById(R.id.text_action_bottom2);
@@ -121,17 +115,11 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
         itemDescription = (TextView) findViewById(R.id.itemDetails);
         addCart = (TextView) findViewById(R.id.text_action_bottom1);
         itemQty = (Spinner) findViewById(R.id.item_detail_qty);
-        standard = (RadioButton)findViewById(R.id.standard_radio_button);
-        express = (RadioButton)findViewById(R.id.express_radio_button);
-        couponApply = (Button)findViewById(R.id.item_single_coupon_apply);
-        couponName = (EditText)findViewById(R.id.item_single_coupon_name);
+        qtyTxt = (TextView) findViewById(R.id.item_detail_qty_text);
 
         mAuth = FirebaseAuth.getInstance();
         uid = mAuth.getCurrentUser().getUid();
         cartDatabase = FirebaseDatabase.getInstance().getReference().child("Cart").child(uid);
-        emailDatabase = FirebaseDatabase.getInstance().getReference().child("Email");
-        ordersDatabase = FirebaseDatabase.getInstance().getReference().child("Orders");
-        couponDatabase = FirebaseDatabase.getInstance().getReference().child("Coupons");
 
         viewPager=(ViewPager) findViewById(R.id.viewpager);
 
@@ -308,8 +296,9 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l)
+    {
+        qtyTxt.setText("Quantity "+itemQty.getSelectedItem().toString());
     }
 
     @Override

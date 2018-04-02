@@ -10,7 +10,6 @@
     app:rightEdgeSwipeOffset="0dp"
     android:layout_height="wrap_content">
 
-
     <LinearLayout
         android:id="@+id/bottom_wraper"
         android:layout_width="100dp"
@@ -86,8 +85,29 @@
                     android:text="Delivery charge: FREE"
                     android:textSize="16sp" />
 
-
             </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/single_cart_delete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:weightSum="2">
+
+            <Button
+                android:layout_weight="0.5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="add to cart"
+                android:id="@+id/add_cart"
+                android:layout_marginLeft="20dp"
+                android:background="@color/colorPrimary"
+                android:textColor="#FFF"/>
 
         </LinearLayout>
 
@@ -98,10 +118,6 @@
             android:background="@color/grey_light" />
 
     </LinearLayout>
-
-
-
-
 
 </com.daimajia.swipe.SwipeLayout>
 
