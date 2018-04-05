@@ -401,13 +401,14 @@ public class CartActivity extends AppCompatActivity
     public void navigateToBaseActivity(View view) {
 
         // merchantKey="";
-        merchantKey = "gtKFFx";
+        merchantKey = "eVzZtWh1";
         Log.i("cost",""+totalCost);
         String costSt = totalCost+"";
         Log.i("cost",""+costSt);
         String email = "payutest@gmail.com";
 
-        int environment= PayuConstants.STAGING_ENV;
+        int environment= PayuConstants.PRODUCTION_ENV;
+        // int environment= PayuConstants.STAGING_ENV;
         userCredentials = merchantKey + ":" + email;
 
         //TODO Below are mandatory params for hash genetation

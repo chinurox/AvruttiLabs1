@@ -39,8 +39,10 @@ public class PaymentsActivity extends FragmentActivity {
             if (bundle != null)
                 payuConfig = bundle.getParcelable(PayuConstants.PAYU_CONFIG);
 
-            if (payuConfig != null) {
-                url = payuConfig.getEnvironment() == PayuConstants.PRODUCTION_ENV ? PayuConstants.PRODUCTION_PAYMENT_URL : PayuConstants.TEST_PAYMENT_URL;
+            if (payuConfig != null)
+            {
+                url = payuConfig.getEnvironment() == PayuConstants.PRODUCTION_ENV ? PayuConstants.PRODUCTION_PAYMENT_URL : PayuConstants.PRODUCTION_PAYMENT_URL;
+                // url = payuConfig.getEnvironment() == PayuConstants.PRODUCTION_ENV ? PayuConstants.PRODUCTION_PAYMENT_URL : PayuConstants.TEST_PAYMENT_URL;
               //  url="https://mobiletest.payu.in/_payment";
                 String[] list=null;
                 if(payuConfig.getData()!=null)
