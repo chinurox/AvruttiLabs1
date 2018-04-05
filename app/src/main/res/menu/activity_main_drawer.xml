@@ -2,43 +2,36 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item
+       <!-- <item
             android:id="@+id/nav_item1"
             android:icon="@drawable/ic_local_offer_black_24dp"
-            android:title="@string/item_1"
-            android:visible="false"/>
+            android:title="@string/item_1" />
         <item
             android:id="@+id/nav_item2"
             android:icon="@drawable/ic_smartphone_black_24dp"
-            android:title="@string/item_2"
-            android:visible="false"/>
+            android:title="@string/item_2" />
         <item
             android:id="@+id/nav_item3"
             android:icon="@drawable/ic_wc_black_24dp"
-            android:title="@string/item_3"
-            android:visible="false"/>
+            android:title="@string/item_3" />
         <item
             android:id="@+id/nav_item4"
             android:icon="@drawable/ic_local_dining_black_24dp"
-            android:title="@string/item_4"
-            android:visible="false"/>
+            android:title="@string/item_4" />
         <item
             android:id="@+id/nav_item5"
             android:icon="@drawable/ic_book_black_24dp"
-            android:title="@string/item_5"
-            android:visible="false"/>
+            android:title="@string/item_5" />
         <item
             android:id="@+id/nav_item6"
             android:icon="@drawable/ic_more_black_24dp"
-            android:title="@string/item_6"
-            android:visible="false"/>
+            android:title="@string/item_6" />
 
         <item
             android:id="@+id/nav_item7"
             android:icon="@drawable/ic_more_black_24dp"
-            android:title="@string/item_7"
-            android:visible="false"/>
-
+            android:title="@string/item_7" />
+-->
 
     </group>
 
@@ -56,15 +49,6 @@
                 android:id="@+id/my_wishlist"
                 android:icon="@drawable/ic_favorite_black_24dp"
                 android:title="@string/my_wishlist" />
-            <!--<item-->
-                <!--android:id="@+id/my_rewards"-->
-                <!--android:icon="@drawable/ic_card_giftcard_black_24dp"-->
-                <!--android:title="@string/my_rewards" />-->
-            <item
-                android:id="@+id/my_account"
-                android:icon="@drawable/ic_person_black_24dp"
-                android:title="@string/my_account"
-                android:visible="false"/>
             <item
                 android:id="@+id/logout_btn"
                 android:icon="@drawable/log_out_icon"

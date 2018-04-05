@@ -1,14 +1,14 @@
 package com.example.gargc.avruttilabs.Model;
 
-/**
- * Created by gargc on 06-03-2018.
- */
 
 public class WishListModel {
 
     private String category;
     private String image;
     private String price;
+    private String status;
+    private String subCategory;
+    private String title;
 
     public String getCategory() {
         return category;
@@ -58,7 +58,4 @@ public class WishListModel {
         this.title = title;
     }
 
-    private String status;
-    private String subCategory;
-    private String title;
 }

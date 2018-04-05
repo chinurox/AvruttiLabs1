@@ -71,6 +71,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
                         android:layout_marginTop="8dp"
+                        android:id="@+id/item_detail_qty_text"
                         android:layout_toLeftOf="@+id/item_detail_qty"
                         android:layout_toStartOf="@+id/item_detail_qty"
                         android:text="Quantity"
@@ -82,7 +83,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:layout_marginTop="8dp"></Spinner>
+                        android:layout_marginTop="8dp"
+                        android:textSize="16sp">
+                    </Spinner>
 
                 </RelativeLayout>
 
@@ -128,7 +131,6 @@
                     android:textSize="12dp" />
 
             </LinearLayout>
-            /
 
             <View
                 android:layout_width="match_parent"
@@ -264,77 +266,6 @@
 
             </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Choose Delivery Option"
-                android:textColor="@color/gen_black"
-                android:textSize="12dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:layout_marginBottom="10dp"
-                android:orientation="horizontal">
-
-                <RadioGroup
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
-
-                    <RadioButton
-                        android:id="@+id/standard_radio_button"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.9"
-                        android:checked="true"
-                        android:text="Standard Shipping" />
-
-                    <RadioButton
-                        android:id="@+id/express_radio_button"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="0.9"
-                        android:text="Express Shipping" />
-
-                </RadioGroup>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="33dp"
-                android:weightSum="2">
-
-                <EditText
-                    android:id="@+id/item_single_coupon_name"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/border_rectangular_white"
-                    android:hint="Enter Coupon"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:layout_weight="0.9"/>
-
-                <Button
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginLeft="10dp"
-                    android:text="Apply"
-                    android:textColor="#FFF"
-                    android:background="@color/colorPrimary"
-                    android:id="@+id/item_single_coupon_apply"/>
-
-            </LinearLayout>
-
         </LinearLayout>
 
     </ScrollView>
@@ -352,19 +283,20 @@
             android:id="@+id/text_action_bottom1"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/gen_white"
+            android:layout_weight="2"
+            android:background="@color/colorPrimary"
             android:gravity="center"
             android:text="ADD TO CART"
-            android:textColor="@color/gen_black"
             android:textSize="14dp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="@color/gen_white"/>
 
         <TextView
             android:id="@+id/text_action_bottom2"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:visibility="gone"
             android:background="@color/colorPrimary"
             android:gravity="center"
             android:text="BUY NOW"

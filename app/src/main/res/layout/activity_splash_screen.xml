@@ -3,11 +3,13 @@
     android:id="@+id/layout_linear"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/bg_screen1"
     android:orientation="vertical"
+    android:background="@color/bg_screen1"
     android:gravity="center">
-    <ImageView android:layout_width="wrap_content"
-        android:layout_height="250dp"
+
+    <ImageView android:layout_width="200dp"
+        android:layout_height="200dp"
         android:src="@drawable/basket"
         android:layout_gravity="center"/>
+
 </LinearLayout>

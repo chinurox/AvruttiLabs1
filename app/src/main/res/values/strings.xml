@@ -1,21 +1,28 @@
 <resources>
-    <string name="app_name">AvruttiLabs</string>
+    <string name="app_name">Avrutti Electronics</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="slide_1_title">Hello Food!</string>
-    <string name="slide_1_desc">The easiest way to order food from your favourite restaurant!
-    </string>
+    <string name="slide_1_title">Component not listed in app?</string>
+    <string name="slide_1_desc">No worries just send us the image of component and we will ship it to you</string>
 
-    <string name="slide_2_title">Movie Tickets</string>
-    <string name="slide_2_desc">Book movie tickets for your family and friends!</string>
+    <string name="slide_2_title">Worried on PCB designing for the project circuit?</string>
+    <string name="slide_2_desc">We do prototyping, PCB designing, circuit designing as per you needs send us the request from PCB request Tab</string>
 
-    <string name="slide_3_title">Great Discounts</string>
-    <string name="slide_3_desc">Best discounts on every single service we offer!</string>
+    <string name="slide_3_title">Wide variety of Do it yourself kits are introduced to have hands on learning</string>
+    <string name="slide_3_desc">a.Magnets  b. Power supplies c. Stepper Motors d. Sensors e. Driver boards f. Displays Relays
+g. Transformers h. Development boards i. Connectors j. Robotics</string>
 
-    <string name="slide_4_title">World Travel</string>
-    <string name="slide_4_desc">Book tickets of any transportation and travel the world!</string>
+    <string name="slide_4_title">Why to choose Avrutti Electronics</string>
+    <string name="slide_4_desc">Avrutti Electronics™ is emerged with the objective of meeting the students , hobbyists hardware needs and to support the research and development in India
+Unique features are \n
+1. Option to request for components \n
+2. Best in class products \n
+3. Delivery throughout India \n
+4. Competitive prices \n
+5. Secure Payment
+</string>
     <string name="poweredBy">Powered by AvruttiLabs.com</string>
     <string name="tag_line1">Fall Into The Shopping</string>
     <string name="tag_line2">Dedicated App for Clearance Sale.</string>

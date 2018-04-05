@@ -32,18 +32,76 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/cart_app_bar"
         android:visibility="gone"
-        android:layout_marginBottom="50dp">
+        android:layout_above="@+id/coupon_holder"
+        android:layout_marginBottom="20dp">
     </android.support.v7.widget.RecyclerView>
 
     <LinearLayout
-        android:visibility="gone"
-        android:layout_below="@+id/cart_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:id="@+id/coupon_holder"
+        android:visibility="gone"
+        android:layout_above="@+id/radio_holder"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="Apply Coupon"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/gen_black"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <EditText
+                android:id="@+id/item_single_coupon_name"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/border_rectangular_white"
+                android:hint="Enter Coupon"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="0.9"/>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:text="Apply"
+                android:textColor="#FFF"
+                android:background="@color/colorPrimary"
+                android:id="@+id/item_single_coupon_apply"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:layout_above="@+id/cart_layout_payment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:id="@+id/radio_holder"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="7dp"
         android:layout_marginBottom="23dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="Delivery Options"
+            android:textColor="@color/gen_black"/>
 
         <RadioGroup
             android:layout_width="match_parent"
@@ -56,7 +114,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.9"
                 android:id="@+id/standard_radio_button"
-                android:text="Standard Shipping"
+                android:text="Standard Shipping\n(INR 60)"
+                android:layout_marginLeft="20dp"
                 android:checked="true"/>
 
             <RadioButton
@@ -64,7 +123,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.9"
-                android:text="Express Shipping"
+                android:text="Express Shipping\n(INR 110)"
                 android:checked="false"
                 android:id="@+id/express_radio_button"/>
 
@@ -79,7 +138,7 @@
         android:layout_alignParentBottom="true"
         android:elevation="30dp"
         android:orientation="horizontal"
-        android:visibility="visible"
+        android:visibility="gone"
         android:weightSum="2">
 
         <TextView
@@ -89,7 +148,7 @@
             android:layout_weight="1"
             android:background="@color/gen_white"
             android:gravity="center"
-            android:text="Rs 8,750"
+            android:text="Rs "
             android:textColor="@color/gen_black"
             android:textSize="14dp"
             android:textStyle="bold" />
@@ -111,8 +170,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/empty_container"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true">
+        android:visibility="visible"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/cart_list"
+        android:layout_toEndOf="@+id/cart_list">
 
         <include
             android:id="@+id/layout_cart_empty"
