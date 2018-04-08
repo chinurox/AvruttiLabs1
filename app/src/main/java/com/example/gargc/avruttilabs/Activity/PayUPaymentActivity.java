@@ -100,7 +100,8 @@ public class PayUPaymentActivity extends AppCompatActivity
         cartDatabase = FirebaseDatabase.getInstance().getReference().child("Cart").child(uid);
 
         Intent intent = getIntent();
-        mAmount = Double.parseDouble(intent.getExtras().getString("cost"));
+        mAmount = 1L;
+        // mAmount = Double.parseDouble(intent.getExtras().getString("cost"));
         addressName = intent.getExtras().getString("address");
 
         userDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -160,23 +161,21 @@ public class PayUPaymentActivity extends AppCompatActivity
             @Override
             public void onPageFinished(WebView view, String url) {
 
-                /*if (url.equals(mSuccessUrl)) {
-                    Intent intent = new Intent(PayUPaymentActivity.this, PaymentStatusActivity.class);
-                    intent.putExtra("status", true);
+                if (url.equals(mSuccessUrl)) {
+                    Intent intent = new Intent(PayUPaymentActivity.this, PayUPaymentActivity.class);
+                    intent.putExtra("status", "true");
                     intent.putExtra("transaction_id", mTXNId);
                     intent.putExtra("id", mId);
-                    intent.putExtra("isFromOrder", isFromOrder);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                 } else if (url.equals(mFailedUrl)) {
-                    Intent intent = new Intent(PayUMoneyActivity.this, PaymentStatusActivity.class);
-                    intent.putExtra("status", false);
+                    Intent intent = new Intent(PayUPaymentActivity.this, PaymentStatusActivity.class);
+                    intent.putExtra("status", "false");
                     intent.putExtra("transaction_id", mTXNId);
                     intent.putExtra("id", mId);
-                    intent.putExtra("isFromOrder", isFromOrder);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
-                }*/
+                }
                 super.onPageFinished(view, url);
             }
         });
@@ -438,6 +437,8 @@ class PayUJavaScriptInterface
 
             }
         });
+
+
     }
 
 }

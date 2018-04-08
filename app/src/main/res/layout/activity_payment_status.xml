@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="15dp"
+    android:gravity="center_horizontal"
+    tools:context="com.example.gargc.avruttilabs.Activity.PaymentStatusActivity">
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Transaction :"
+        android:textStyle="bold"
+        android:textSize="18dp"
+        android:textColor="#000"
+        android:id="@+id/status_txt_status"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Transaction ID :"
+        android:textSize="18dp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/status_txt_txnid"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ID :"
+        android:textSize="18dp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/status_txt_id"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:background="@color/colorPrimary"
+        android:textColor="#FFF"
+        android:text="ok"
+        android:id="@+id/status_btn_ok"/>
+
+</LinearLayout>
