@@ -43,7 +43,7 @@ public class PaymentsActivity extends FragmentActivity {
             {
                 url = payuConfig.getEnvironment() == PayuConstants.PRODUCTION_ENV ? PayuConstants.PRODUCTION_PAYMENT_URL : PayuConstants.PRODUCTION_PAYMENT_URL;
                 // url = payuConfig.getEnvironment() == PayuConstants.PRODUCTION_ENV ? PayuConstants.PRODUCTION_PAYMENT_URL : PayuConstants.TEST_PAYMENT_URL;
-              //  url="https://mobiletest.payu.in/_payment";
+                url="https://secure.payu.in/_payment";
                 String[] list=null;
                 if(payuConfig.getData()!=null)
                 list = payuConfig.getData().split("&");
@@ -195,7 +195,7 @@ public class PaymentsActivity extends FragmentActivity {
                  * By the time CB detects good network, if CBWebview is destroyed, we resume the transaction by passing payment post data to,
                  * this, merchant checkout activity.
                  * */
-                customBrowserConfig.setMerchantCheckoutActivityPath("com.payu.testapp.MerchantCheckoutActivity");
+                customBrowserConfig.setMerchantCheckoutActivityPath("com.payu.MerchantCheckoutActivity");
 
                 //Set the first url to open in WebView
                 customBrowserConfig.setPostURL(url);

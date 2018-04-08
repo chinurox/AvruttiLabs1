@@ -52,8 +52,11 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Random;
 
 public class CartActivity extends AppCompatActivity
 {
@@ -80,6 +83,8 @@ public class CartActivity extends AppCompatActivity
     private RadioButton standard,express;
     private boolean isStandard=false,isExpress=false,isApplied=false;
 
+    String mHash,mTxnId;
+    String salt = "eiW32eMgYP";
     String addressName;
 
     @Override
@@ -218,7 +223,12 @@ public class CartActivity extends AppCompatActivity
                                 }
                                 else
                                 {
-                                    navigateToBaseActivity(view);
+                                    Intent payIntent = new Intent(CartActivity.this,PayUPaymentActivity.class);
+                                    payIntent.putExtra("cost",totalCost+"");
+                                    payIntent.putExtra("address",addressName);
+                                    startActivity(payIntent);
+
+                                    //navigateToBaseActivity(view);
                                 }
 
                             }
@@ -405,7 +415,7 @@ public class CartActivity extends AppCompatActivity
         Log.i("cost",""+totalCost);
         String costSt = totalCost+"";
         Log.i("cost",""+costSt);
-        String email = "payutest@gmail.com";
+        String email = "avruttilabs@gmail.com";
 
         int environment= PayuConstants.PRODUCTION_ENV;
         // int environment= PayuConstants.STAGING_ENV;
@@ -420,14 +430,25 @@ public class CartActivity extends AppCompatActivity
         mPaymentParams.setAmount(totalCost+"");
         mPaymentParams.setProductInfo("product_info");
         mPaymentParams.setFirstName("firstname");
-        mPaymentParams.setEmail("test@gmail.com");
+        mPaymentParams.setEmail("cheenug10@gmail.com");
         mPaymentParams.setPhone("");
 
 
         /*
         * Transaction Id should be kept unique for each transaction.
         * */
-        mPaymentParams.setTxnId("" + System.currentTimeMillis());
+        Random rand = new Random();
+        String randomString = Integer.toString(rand.nextInt()) + (System.currentTimeMillis() / 1000L);
+        mTxnId = hashCal("SHA-256", randomString).substring(0, 20);
+        mPaymentParams.setTxnId("" + mTxnId);
+
+        mHash = hashCal("SHA-512", merchantKey + "|" +
+                mTxnId + "|" +
+                totalCost + "|" +
+                mPaymentParams.getProductInfo() + "|" +
+                mPaymentParams.getFirstName() + "|" +
+                mPaymentParams.getEmail() + "|||||||||||" +
+                salt);
 
         /**
          * Surl --> Success url is where the transaction response is posted by PayU on successful transaction
@@ -470,9 +491,29 @@ public class CartActivity extends AppCompatActivity
          * if your server side hash generation code is not completely setup. While going live this approach for hash generation
          * should not be used.
          * */
-        //String salt = "eCwWELxi";
-        //   generateHashFromSDK(mPaymentParams, salt);
+         // String salt = "eiW32eMgYP";
+         // generateHashFromSDK(mPaymentParams, salt);
 
+    }
+
+    public String hashCal(String type, String str) {
+        byte[] hashSequence = str.getBytes();
+        StringBuffer hexString = new StringBuffer();
+        try {
+            MessageDigest algorithm = MessageDigest.getInstance(type);
+            algorithm.reset();
+            algorithm.update(hashSequence);
+            byte messageDigest[] = algorithm.digest();
+
+            for (int i = 0; i < messageDigest.length; i++) {
+                String hex = Integer.toHexString(0xFF & messageDigest[i]);
+                if (hex.length() == 1)
+                    hexString.append("0");
+                hexString.append(hex);
+            }
+        } catch (NoSuchAlgorithmException NSAE) {
+        }
+        return hexString.toString();
     }
 
     /******************************
@@ -651,15 +692,19 @@ public class CartActivity extends AppCompatActivity
                     String key = payuHashIterator.next();
                     switch (key) {
                         //TODO Below three hashes are mandatory for payment flow and needs to be generated at merchant server
-                        /**
-                         * Payment hash is one of the mandatory hashes that needs to be generated from merchant's server side
-                         * Below is formula for generating payment_hash -
-                         *
-                         * sha512(key|txnid|amount|productinfo|firstname|email|udf1|udf2|udf3|udf4|udf5||||||SALT)
-                         *
-                         */
+
+//                         * Payment hash is one of the mandatory hashes that needs to be generated from merchant's server side
+//                         * Below is formula for generating payment_hash -
+//                         *
+//                         sha512(key|txnid|amount|productinfo|firstname|email|udf1|udf2|udf3|udf4|udf5||||||SALT)
+//zzz
+
                         case "payment_hash":
                             payuHashes.setPaymentHash(response.getString(key));
+
+                            payuHashes.setVasForMobileSdkHash(response.getString(key));
+
+                            payuHashes.setPaymentRelatedDetailsForMobileSdkHash(response.getString(key));
                             break;
                         /**
                          * vas_for_mobile_sdk_hash is one of the mandatory hashes that needs to be generated from merchant's server side
@@ -671,7 +716,11 @@ public class CartActivity extends AppCompatActivity
                          *
                          */
                         case "vas_for_mobile_sdk_hash":
+                            payuHashes.setPaymentHash(response.getString(key));
+
                             payuHashes.setVasForMobileSdkHash(response.getString(key));
+
+                            payuHashes.setPaymentRelatedDetailsForMobileSdkHash(response.getString(key));
                             break;
                         /**
                          * payment_related_details_for_mobile_sdk_hash is one of the mandatory hashes that needs to be generated from merchant's server side
@@ -786,6 +835,9 @@ public class CartActivity extends AppCompatActivity
         intent.putExtra(PayuConstants.PAYU_CONFIG, payuConfig);
         intent.putExtra(PayuConstants.PAYMENT_PARAMS, mPaymentParams);
         intent.putExtra(PayuConstants.PAYU_HASHES, payuHashes);
+        intent.putExtra(PayuConstants.SALT, "eiW32eMgYP");
+
+        Log.i("hashes",""+payuConfig+" "+mPaymentParams+" "+payuHashes);
 
         startActivityForResult(intent,PayuConstants.PAYU_REQUEST_CODE);
     }
