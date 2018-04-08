@@ -100,8 +100,8 @@ public class PayUPaymentActivity extends AppCompatActivity
         cartDatabase = FirebaseDatabase.getInstance().getReference().child("Cart").child(uid);
 
         Intent intent = getIntent();
-        mAmount = 1L;
-        // mAmount = Double.parseDouble(intent.getExtras().getString("cost"));
+        // mAmount = 1L;
+        mAmount = Double.parseDouble(intent.getExtras().getString("cost"));
         addressName = intent.getExtras().getString("address");
 
         userDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
