@@ -285,12 +285,14 @@ public class ItemDetailsActivity extends AppCompatActivity implements AdapterVie
         if(itemStatus.equalsIgnoreCase("Out Of Stock")){
             Log.i("false","false");
             status.setTextColor(Color.parseColor("#FF0000"));
+            addCart.setVisibility(View.GONE);
             btnBuy.setText("Out Of Stock");
             btnBuy.setEnabled(false);
         }else{
             Log.i("true","true");
             status.setTextColor(Color.parseColor("#008000"));
             btnBuy.setText("BUY NOW");
+            addCart.setVisibility(View.VISIBLE);
             btnBuy.setEnabled(true);
         }
     }

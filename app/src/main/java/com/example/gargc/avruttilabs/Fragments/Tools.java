@@ -308,6 +308,21 @@ public class Tools extends Fragment {
                 Log.i("image",model.getImage());
                 Picasso.with(getContext()).load(model.getImage()).placeholder(R.mipmap.image_not_available).into(viewHolder.imageView);
 
+                wishListDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.i("datasnapshot",dataSnapshot.toString());
+                        if(dataSnapshot.child(model.getTitle()).exists()) {
+                            viewHolder.likeButton.setLiked(true);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
                 // setting on click on item view
                 viewHolder.view.setOnClickListener(new View.OnClickListener() {
                     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
