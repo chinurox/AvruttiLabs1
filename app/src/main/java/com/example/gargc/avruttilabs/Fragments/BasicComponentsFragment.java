@@ -160,31 +160,38 @@ public class BasicComponentsFragment extends Fragment {
                         positionClicked=position;
                         if(currentlyClickedButton.equals(""))
                         {
-                            Log.i("clicked","firsttime");
-                            currentlyClickedButton=subcat;
-                            viewHolder.view.setVisibility(View.VISIBLE);
-                            viewClicked=view;
-                            setSubCategoryProducts();
+                            try {
+                                Log.i("clicked", "firsttime");
+                                currentlyClickedButton = subcat;
+                                viewHolder.view.setVisibility(View.VISIBLE);
+                                viewClicked = view;
+                                setSubCategoryProducts();
+                            }
+                            catch(Exception e) {}
                         }
                        else if(currentlyClickedButton.equals(subcat))
                         {
-                            Log.i("clicked","onsamebutton");
-                            currentlyClickedButton="";
-                            MyViewHolder myViewHolder=(MyViewHolder)subcategoryRecyclerView.findContainingViewHolder(viewClicked);
-                            myViewHolder.view.setVisibility(View.GONE);
-                            viewClicked=null;
-                            setProducts();
-
+                            try {
+                                Log.i("clicked", "onsamebutton");
+                                currentlyClickedButton = "";
+                                MyViewHolder myViewHolder = (MyViewHolder) subcategoryRecyclerView.findContainingViewHolder(viewClicked);
+                                myViewHolder.view.setVisibility(View.GONE);
+                                viewClicked = null;
+                                setProducts();
+                            }
+                            catch(Exception e) {}
                         }
-                        else
-                        {
-                            Log.i("clicked","differentbutton");
-                            currentlyClickedButton=subcat;
-                            MyViewHolder myViewHolder=(MyViewHolder) subcategoryRecyclerView.findContainingViewHolder(viewClicked);
-                            myViewHolder.view.setVisibility(View.GONE);
-                            viewClicked=view;
-                            viewHolder.view.setVisibility(View.VISIBLE);
-                            setSubCategoryProducts();
+                        else {
+                            try {
+                                Log.i("clicked", "differentbutton");
+                                currentlyClickedButton = subcat;
+                                MyViewHolder myViewHolder = (MyViewHolder) subcategoryRecyclerView.findContainingViewHolder(viewClicked);
+                                myViewHolder.view.setVisibility(View.GONE);
+                                viewClicked = view;
+                                viewHolder.view.setVisibility(View.VISIBLE);
+                                setSubCategoryProducts();
+                            }
+                            catch(Exception e) {}
                         }
 
                     }
