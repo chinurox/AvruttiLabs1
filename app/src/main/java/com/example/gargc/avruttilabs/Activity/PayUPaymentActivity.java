@@ -72,7 +72,7 @@ public class PayUPaymentActivity extends AppCompatActivity
 
     private FirebaseAuth mAuth;
     private String uid , message = "",addressName;
-    private DatabaseReference ordersDatabase,cartDatabase,userDatabase;
+    private DatabaseReference ordersDatabase,cartDatabase,userDatabase,emailDatabase;
     private int count;
 
     @SuppressLint({"AddJavascriptInterface", "SetJavaScriptEnabled", "JavascriptInterface"})
@@ -98,6 +98,7 @@ public class PayUPaymentActivity extends AppCompatActivity
         userDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
         ordersDatabase = FirebaseDatabase.getInstance().getReference().child("Orders").child(uid);
         cartDatabase = FirebaseDatabase.getInstance().getReference().child("Cart").child(uid);
+        emailDatabase = FirebaseDatabase.getInstance().getReference().child("Email");
 
         Intent intent = getIntent();
         // mAmount = 1L;
@@ -162,21 +163,63 @@ public class PayUPaymentActivity extends AppCompatActivity
             public void onPageFinished(WebView view, String url) {
 
                 if (url.equals(mSuccessUrl)) {
+                    Log.i("going","finish success");
+
                     Intent intent = new Intent(PayUPaymentActivity.this, PayUPaymentActivity.class);
                     intent.putExtra("status", "true");
                     intent.putExtra("transaction_id", mTXNId);
                     intent.putExtra("id", mId);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+
+                    //---------------MAIL PART-----------------------
+                    emailDatabase.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            Log.i("check", "======="+dataSnapshot.child("email").getValue());
+                            Log.i("check", "======="+dataSnapshot.child("password").getValue());
+
+                            sendEmail(dataSnapshot.child("email").getValue().toString(),dataSnapshot.child("password").getValue().toString(),mTXNId);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                    //---------------MAIL PART-----------------------
+
                     startActivity(intent);
-                } else if (url.equals(mFailedUrl)) {
+                }
+                else if (url.equals(mFailedUrl)) {
+                    Log.i("going","finish failure");
+
                     Intent intent = new Intent(PayUPaymentActivity.this, PaymentStatusActivity.class);
                     intent.putExtra("status", "false");
                     intent.putExtra("transaction_id", mTXNId);
                     intent.putExtra("id", mId);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
 
-                    Log.i("going","finish else");
+                    //---------------MAIL PART-----------------------
+                    emailDatabase.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            Log.i("check", "======="+dataSnapshot.child("email").getValue());
+                            Log.i("check", "======="+dataSnapshot.child("password").getValue());
+
+                            sendEmail(dataSnapshot.child("email").getValue().toString(),dataSnapshot.child("password").getValue().toString(),mTXNId);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                    //---------------MAIL PART-----------------------
+
+                    startActivity(intent);
                 }
                 super.onPageFinished(view, url);
             }
@@ -400,7 +443,6 @@ public class PayUPaymentActivity extends AppCompatActivity
 class PayUJavaScriptInterface
 {
     Context mContext;
-    DatabaseReference emailDatabase;
 
     /**
      * Instantiate the interface and set the context
@@ -411,35 +453,6 @@ class PayUJavaScriptInterface
 
     public void success(long id, final String paymentId)
     {
-        emailDatabase = FirebaseDatabase.getInstance().getReference().child("Email");
-
-        final Handler[] mHandler = {new Handler()};
-
-        mHandler[0].post(new Runnable() {
-
-            public void run() {
-                mHandler[0] = null;
-
-            }
-        });
-
-        final PayUPaymentActivity payUPaymentActivity = new PayUPaymentActivity();
-        emailDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                Log.i("check", "======="+dataSnapshot.child("email").getValue());
-                Log.i("check", "======="+dataSnapshot.child("password").getValue());
-
-                payUPaymentActivity.sendEmail(dataSnapshot.child("email").getValue().toString(),dataSnapshot.child("password").getValue().toString(),paymentId);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
     }
 
 }
