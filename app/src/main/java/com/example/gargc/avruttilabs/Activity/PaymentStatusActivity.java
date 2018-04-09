@@ -40,6 +40,8 @@ public class PaymentStatusActivity extends AppCompatActivity
         }
         else {
             tvStatus.setText("Transaction Was Not Successful");
+            tvTxnId.setVisibility(View.GONE);
+            tvId.setVisibility(View.GONE);
         }
 
         btnOk.setOnClickListener(new View.OnClickListener() {

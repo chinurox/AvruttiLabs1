@@ -67,8 +67,8 @@ public class PayUPaymentActivity extends AppCompatActivity
     private double mAmount; // From Previous Activity
     private String mPhone; // From Previous Activity
     private String mServiceProvider = "payu_paisa";
-    private String mSuccessUrl = "your success URL";
-    private String mFailedUrl = "Your Failure URL";
+    private String mSuccessUrl = "https://payu.herokuapp.com/success";
+    private String mFailedUrl = "https://payu.herokuapp.com/failure";
 
     private FirebaseAuth mAuth;
     private String uid , message = "",addressName;
@@ -175,6 +175,8 @@ public class PayUPaymentActivity extends AppCompatActivity
                     intent.putExtra("id", mId);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
+
+                    Log.i("going","finish else");
                 }
                 super.onPageFinished(view, url);
             }
