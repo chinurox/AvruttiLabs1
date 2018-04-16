@@ -94,7 +94,7 @@ public class PCBRequest extends Fragment
             Intent emailIntent = new Intent(Intent.ACTION_SEND);
             // set the type to 'email'
             emailIntent.setType("vnd.android.cursor.dir/email");
-            String to[] = {"labsavrutti@gmail.com"};
+            String to[] = {"avruttielectronics@gmail.com"};
             emailIntent.putExtra(Intent.EXTRA_EMAIL, to);
             // the attachment
             emailIntent.putExtra(Intent.EXTRA_STREAM, fileUri);

@@ -125,7 +125,7 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/border_rectangular_white"
             android:gravity="start|center_vertical"
-            android:hint="Username"
+            android:hint="Email id"
             android:maxLines="1"
             android:paddingLeft="16dp"
             android:singleLine="true"

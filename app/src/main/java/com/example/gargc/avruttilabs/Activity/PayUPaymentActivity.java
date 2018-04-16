@@ -88,6 +88,12 @@ public class PayUPaymentActivity extends AppCompatActivity
         setContentView(R.layout.activity_pay_upayment);
 
         webView = (WebView) findViewById(R.id.payumoney_webview);
+        mEmailId=getIntent().getStringExtra("email");
+        mPhone=getIntent().getStringExtra("phone");
+
+        Log.i("email1",mEmailId);
+        Log.i("mPhone",mPhone);
+
 
         /**
          * Context Variable
@@ -193,6 +199,8 @@ public class PayUPaymentActivity extends AppCompatActivity
                 else {
                     Log.i("going","finish failure");
                     Log.i("checking","working5");
+
+                    //send();
 
 
                 }
@@ -378,7 +386,7 @@ public class PayUPaymentActivity extends AppCompatActivity
         final String emailOfSender = mAuth.getCurrentUser().getEmail().toString();
         Log.i("mailofsender",emailOfSender);
 
-        final String email3="labsavrutti@gmail.com";
+        final String email3="avruttielectronics@gmail.com";
        // final String email3="cheenug10@gmail.com";
 
         final String subject = "Placement Of Order";

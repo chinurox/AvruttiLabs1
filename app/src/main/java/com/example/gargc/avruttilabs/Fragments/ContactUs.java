@@ -62,7 +62,7 @@ public class ContactUs extends Fragment {
         {
             Intent i = new Intent(Intent.ACTION_SEND);
             i.setType("message/rfc822");
-            i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"labsavrutti@gmail.com"});
+            i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"avruttielectronics@gmail.com"});
             i.putExtra(Intent.EXTRA_SUBJECT, "subject of email");
             i.putExtra(Intent.EXTRA_TEXT   , "order id : "+id+" date : "+date);
             try {

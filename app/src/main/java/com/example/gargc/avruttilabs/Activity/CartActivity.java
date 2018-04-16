@@ -223,10 +223,31 @@ public class CartActivity extends AppCompatActivity
                                 }
                                 else
                                 {
-                                    Intent payIntent = new Intent(CartActivity.this,PayUPaymentActivity.class);
-                                    payIntent.putExtra("cost",totalCost+"");
-                                    payIntent.putExtra("address",addressName);
-                                    startActivity(payIntent);
+                                    userDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                            String mEmailId = dataSnapshot.child("emailId").getValue().toString();
+                                            String mPhone = dataSnapshot.child("phonenumber").getValue().toString();
+
+                                            Log.i("email",mEmailId);
+                                            Log.i("phone",mPhone);
+
+                                            Intent payIntent = new Intent(CartActivity.this,PayUPaymentActivity.class);
+                                            payIntent.putExtra("cost",totalCost+"");
+                                            payIntent.putExtra("address",addressName);
+                                            payIntent.putExtra("email",mEmailId);
+                                            payIntent.putExtra("phone",mPhone);
+                                            startActivity(payIntent);
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+
+
 
                                     //navigateToBaseActivity(view);
                                 }
